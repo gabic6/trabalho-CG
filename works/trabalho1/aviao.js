@@ -109,6 +109,40 @@ export default function aviao() {
     asas_menores.rotation.set(Math.PI / 2 - degreesToRadians(5), 0, 0);
     cilindro3.add(asas_menores);
 
+    //Curvatura da asa menor
+    var curvatura = new THREE.Shape();
+    const x = largura_asas_menores, y = altura_asas_menores, z = profundidade_asas_menores ;
+    // curvatura.moveTo(x+5,y+5);
+    // curvatura.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+    // curvatura.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
+    // curvatura.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
+    // curvatura.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+    // curvatura.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+    // curvatura.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
+
+    curvatura.moveTo( 0, 0 );
+    curvatura.lineTo( profundidade_asas_menores, 0 );
+    curvatura.lineTo( profundidade_asas_menores, largura_asas_menores );
+    curvatura.lineTo( 0, 0 ); 
+    // curvatura.lineTo( x, y );
+    
+    const extrudeSettings = {
+        steps: 2,
+        depth: altura_asas_menores / 2.0,
+        bevelEnabled: true,
+        bevelThickness: 0.05,
+        bevelSize: 0.05,
+        bevelOffset: 0,
+        bevelSegments: 10
+    };
+
+    var curvaturaasa = new THREE.ExtrudeGeometry(curvatura, extrudeSettings);
+    var curvatura_asa = new THREE.Mesh(curvaturaasa, material_aviao);
+    curvatura_asa.rotation.set(0,0,degreesToRadians(90));
+    curvatura_asa.position.set(asas_menores.position.z,asas_menores.position.y,asas_menores.position.z);
+    //asas_menores.add(curvatura_asa);
+    cilindro3.add(curvatura_asa);
+
     //esfera atrás
     var raio_esfera_atras = diametro_cilindro3 / 2.0;
     var geometria_esfera_atras = new THREE.SphereGeometry(raio_esfera_atras, 18, 18);
@@ -118,7 +152,7 @@ export default function aviao() {
     esfera_atras.position.set(0.0, -altura_cilindro3 / 2.0, 0.0);
     // esfera_atras.rotation.set(degreesToRadians(5),0.0,0.0)
     cilindro3.add(esfera_atras)
-
+ 
     // leme
     var altura_leme1 = 0.1;
     var largura_leme1 = 1.5;
@@ -145,6 +179,6 @@ export default function aviao() {
     aviaoHolder.add(cilindro1);
     aviaoHolder.add(axesHelper);
 
-    return { aviaoHolder, eixo_helice };
+    return { aviaoHolder, eixo_helice, curvatura_asa};
     //return { aviaoHolder: aviaoHolder, eixo_helice: eixo_helice };
 }
