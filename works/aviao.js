@@ -1,17 +1,9 @@
 
-import * as THREE from '../../build/three.module.js';
-import Stats from '../../build/jsm/libs/stats.module.js';
-import { GUI } from '../../build/jsm/libs/dat.gui.module.js';
-import { TrackballControls } from '../../build/jsm/controls/TrackballControls.js';
+import * as THREE from '../build/three.module.js';
+
 import {
-    initRenderer,
-    initCamera,
     degreesToRadians,
-    onWindowResize,
-    initDefaultBasicLight,
-    createGroundPlaneWired
-} from "../../libs/util/util.js";
-import * as TWEEN from "../../libs/other/tween.js/dist/tween.esm.js";
+} from "../libs/util/util.js";
 
 export default function aviao() {
     var material_aviao = new THREE.MeshPhongMaterial();
@@ -98,13 +90,12 @@ export default function aviao() {
     asas_maiores.rotation.set(Math.PI / 2, 0, 0);
     cilindro1.add(asas_maiores);
     
-    //paralelepípedo asas maiores
+    //Ponta das asas maiores
     var formato_para = new THREE.Shape();
     formato_para.moveTo(0,0);
     formato_para.lineTo(0,altura_asas_maiores);
     formato_para.lineTo(0.3,(altura_asas_maiores)+0.1);
     formato_para.lineTo(0.3,-altura_asas_maiores); 
-    // formato_para.lineTo(1.0,-altura_asas_maiores); 
     
     const extrudeSettings2 = {
         steps: 2,
@@ -117,40 +108,35 @@ export default function aviao() {
     };
 
     var shapePara = new THREE.ExtrudeGeometry(formato_para, extrudeSettings2);
+    //ponta direita
     var pontaAsas_aviao_direita = new THREE.Mesh(shapePara, material_aviao);
     pontaAsas_aviao_direita.rotation.set(degreesToRadians(180),0,degreesToRadians(10));
     pontaAsas_aviao_direita.position.set(largura_asas_maiores/2.0 ,altura_asas_maiores/2.0,profundidade_asas_maiores/2.0);
     asas_maiores.add(pontaAsas_aviao_direita);
- 
+    //ponta esquerda
     var pontaAsas_aviao_esquerda = new THREE.Mesh(shapePara, material_aviao);
     pontaAsas_aviao_esquerda.rotation.set(0.0,0.0,degreesToRadians(190));
     pontaAsas_aviao_esquerda.position.set(-largura_asas_maiores/2.0 ,altura_asas_maiores/2.0,-profundidade_asas_maiores/2.0);
     asas_maiores.add(pontaAsas_aviao_esquerda);
+   
 
-    //asa menores
+    //Asas menores - parte de trás
     var altura_asas_menores = 0.05;
     var largura_asas_menores = 4.0;
     var profundidade_asas_menores = 0.75;
-    var geometria_asas_menores = new THREE.BoxGeometry(largura_asas_menores, altura_asas_menores, profundidade_asas_menores);
-    var asas_menores = new THREE.Mesh(geometria_asas_menores, material_aviao);
-    asas_menores.position.set(0.0, -altura_cilindro3 / 2.0 + profundidade_asas_menores / 2.0, 0.0);
-    asas_menores.rotation.set(Math.PI / 2 - degreesToRadians(5), 0, 0);
-    // cilindro3.add(asas_menores);
-
-    //Curvatura da asa menor
-    var curvatura = new THREE.Shape();
-    curvatura.moveTo(0,0);
-    curvatura.lineTo( 0, diametro_cilindro3/2.0 ); 
-    curvatura.lineTo( profundidade_asas_menores/3.0,largura_asas_menores/2.0);    
-    curvatura.lineTo( profundidade_asas_menores, largura_asas_menores/2.0);
-    curvatura.lineTo( profundidade_asas_menores, 0 );
-    curvatura.lineTo(profundidade_asas_menores,-largura_asas_menores/2.0);
-    curvatura.lineTo(profundidade_asas_menores/3.0,-largura_asas_menores/2.0);
-    curvatura.lineTo(0,-diametro_cilindro3/2.0);
+    var curvaAsa_menor = new THREE.Shape();
+    curvaAsa_menor.moveTo(0,0);
+    curvaAsa_menor.lineTo( 0, diametro_cilindro3/2.0 ); 
+    curvaAsa_menor.lineTo( profundidade_asas_menores/3.0,largura_asas_menores/2.0);    
+    curvaAsa_menor.lineTo( profundidade_asas_menores, largura_asas_menores/2.0);
+    curvaAsa_menor.lineTo( profundidade_asas_menores, 0 );
+    curvaAsa_menor.lineTo(profundidade_asas_menores,-largura_asas_menores/2.0);
+    curvaAsa_menor.lineTo(profundidade_asas_menores/3.0,-largura_asas_menores/2.0);
+    curvaAsa_menor.lineTo(0,-diametro_cilindro3/2.0);
   
     const extrudeSettings = {
         steps: 2,
-        depth: altura_asas_menores*3,
+        depth: altura_asas_menores*2,
         bevelEnabled: false,
         bevelThickness: 0.05,
         bevelSize: 0.05,
@@ -158,12 +144,11 @@ export default function aviao() {
         bevelSegments: 10
     };
 
-    var curvaturaasa = new THREE.ExtrudeGeometry(curvatura, extrudeSettings);
-    var curvatura_asa = new THREE.Mesh(curvaturaasa, material_aviao);
-    curvatura_asa.rotation.set(0,0,degreesToRadians(180+90));
-    curvatura_asa.position.set(0.0, -altura_cilindro3 / 2.0 + profundidade_asas_menores,0.0);
-    // curvatura_asa.rotation.set(Math.PI / 2 - degreesToRadians(5), 0, 0);
-    cilindro3.add(curvatura_asa);
+    var geometry_asas_menores = new THREE.ExtrudeGeometry(curvaAsa_menor, extrudeSettings);
+    var asas_menores = new THREE.Mesh(geometry_asas_menores, material_aviao);
+    asas_menores.rotation.set(0,0,degreesToRadians(180+90));
+    asas_menores.position.set(0.0, -altura_cilindro3 / 2.0 + profundidade_asas_menores,0.0);
+    cilindro3.add(asas_menores);
 
     //esfera atrás
     var raio_esfera_atras = diametro_cilindro3 / 2.0;
@@ -192,12 +177,13 @@ export default function aviao() {
     leme2.rotation.set(0.0, degreesToRadians(20), 0.0);
     leme1.add(leme2);
 
+    //objeto que armazena o cilindro1(corpo principal do avião)
     var aviaoHolder= new THREE.Object3D();
     var axesHelper = new THREE.AxesHelper(200);
 
     aviaoHolder.add(cilindro1);
-    aviaoHolder.add(axesHelper);
+    //aviaoHolder.add(axesHelper);
 
-    return { aviaoHolder, eixo_helice, curvatura_asa};
-    //return { aviaoHolder: aviaoHolder, eixo_helice: eixo_helice };
+    return { aviaoHolder, eixo_helice};
+
 }
