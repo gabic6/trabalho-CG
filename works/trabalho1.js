@@ -29,7 +29,7 @@ var clock = new THREE.Clock();
 
 /////////// Câmera simulação //////////////////
 
-var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
 cameraSimula.lookAt(0, 0, 0);
 cameraSimula.position.set(0.0, 0.0, -1.0);
 
@@ -46,9 +46,16 @@ scene.add(cameraSimulaHolderHolder);
 
 /////////// Câmera do Piloto //////////////////
 
-var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
 cameraPiloto.lookAt(0, 0, 1);
 cameraPiloto.position.set(0.0, 2.0, 0.0);
+
+/////////// Câmera de debug ////////////
+
+var cameraDebug = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
+cameraDebug.lookAt(0, 0, 0);
+cameraDebug.position.set(0.0, 50.0, 100.0);
+cameraDebug.rotation.set(-0.3, 0.0, 0.0);
 
 ///////////Mostrar axis////////////////
 
@@ -102,15 +109,15 @@ function alternaModo() {
             rotacaoAviaoSalva = aviaoHolder.rotation.clone();
 
             // Aqui zera tudo pro modo inspeção
-            aviaoHolder.position.set(0.0, 0.0, 0.0);
-            aviaoHolder.rotation.set(0.0, 0.0, 0.0);
+            aviaoHolder.setPosition(0.0, 0.0, 0.0);
+            aviaoHolder.setRotation(0.0, 0.0, 0.0);
 
         } else {
             trackballControls.enabled = false;
 
             // Aqui restaura a posição salva
-            aviaoHolder.position.copy(posicaoAviaoSalva);
-            aviaoHolder.rotation.copy(rotacaoAviaoSalva);
+            aviaoHolder.setPosition(posicaoAviaoSalva.x, posicaoAviaoSalva.y, posicaoAviaoSalva.z);
+            aviaoHolder.setRotation(rotacaoAviaoSalva.x, rotacaoAviaoSalva.y, rotacaoAviaoSalva.z);
         }
 
     }
@@ -202,7 +209,7 @@ function movimentaAviao() {
     let forcaEmpuxo = -20;
     
     // O deslocamento lateral quando está virando, proporcional a rotação no eixo Z
-    aviaoHolder.position.x += forcaEmpuxo * Math.sin(aviaoHolder.rotation.z) * delta;
+    //aviaoHolder.position.x += forcaEmpuxo * Math.sin(aviaoHolder.rotation.z) * delta;
 
     // A rotação no eixo Y proporcional ao quanto está rodando no eixo Z
     let dy = aviaoHolder.rotation.z * -0.1 * delta;
@@ -262,5 +269,6 @@ function render() {
         renderer.render(scene, cameraPiloto) // Render scene
     } else {
         renderer.render(scene, cameraSimula) // Render scene
+        //renderer.render(scene, cameraDebug) // Render scene
     }
 }
