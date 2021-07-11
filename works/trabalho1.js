@@ -70,11 +70,11 @@ scene.add(planeGeometry);
 scene.add(axesHelper);
 
 
-
 //////////// Avião ////////////////
 
 var posicaoAviaoSalva = new THREE.Vector3();
 var rotacaoAviaoSalva = new THREE.Vector3();
+var rotacaoAviao = new THREE.Vector3();
 
 // Obtem o avião do arquivo separado
 var { aviaoHolder, eixo_helice } = aviao();
@@ -106,18 +106,20 @@ function alternaModo() {
 
             // Aqui salva a posição
             posicaoAviaoSalva = aviaoHolder.position.clone();
-            rotacaoAviaoSalva = aviaoHolder.rotation.clone();
+            rotacaoAviaoSalva = rotacaoAviao.clone();
 
             // Aqui zera tudo pro modo inspeção
-            aviaoHolder.setPosition(0.0, 0.0, 0.0);
-            aviaoHolder.setRotation(0.0, 0.0, 0.0);
+            aviaoHolder.position.set(0.0, 0.0, 0.0);
+            aviaoHolder.rotation.set(0.0, 0.0, 0.0);
+            rotacaoAviao.set(0,0,0);
 
         } else {
             trackballControls.enabled = false;
 
             // Aqui restaura a posição salva
-            aviaoHolder.setPosition(posicaoAviaoSalva.x, posicaoAviaoSalva.y, posicaoAviaoSalva.z);
-            aviaoHolder.setRotation(rotacaoAviaoSalva.x, rotacaoAviaoSalva.y, rotacaoAviaoSalva.z);
+            aviaoHolder.position.set(posicaoAviaoSalva.x, posicaoAviaoSalva.y, posicaoAviaoSalva.z);
+            //aviaoHolder.setRotation(rotacaoAviaoSalva.x, rotacaoAviaoSalva.y, rotacaoAviaoSalva.z);
+            rotacaoAviao = rotacaoAviaoSalva.clone();
         }
 
     }
@@ -144,7 +146,7 @@ function alternaModo() {
     );
 
     // Roda a câmera no pivô deslocado para manter ela atrás do avião
-    cameraSimulaHolderHolder.rotation.y = aviaoHolder.rotation.y;//+ degreesToRadians(180);
+    cameraSimulaHolderHolder.rotation.y = rotacaoAviao.y;//+ degreesToRadians(180);
 }
 
 ///////////////////// Movimentação /////////////////////
@@ -159,61 +161,55 @@ var maxangle = degreesToRadians(45);
 function movimentaAviao() {
 
     if (keyboard.pressed("up")) {
-        aviaoHolder.rotateX(speedRot * delta);
+        rotacaoAviao.x += speedRot * delta;
     } else if (keyboard.pressed("down")) {
-        aviaoHolder.rotateX(-speedRot * delta);
+        rotacaoAviao.x -= speedRot * delta;
     } else {
         //volta o valor de x pra zero
-        let rx = Math.round(aviaoHolder.rotation.x * 1000) / 1000;
+        let rx = Math.round(rotacaoAviao.x * 1000) / 1000;
         if (rx > 0) {
-            aviaoHolder.rotateX(-speedRot * delta * 0.5);
+            rotacaoAviao.x -= speedRot * delta * 0.5;
         } else if (rx < 0) {
-            aviaoHolder.rotateX(speedRot * delta * 0.5);
+            rotacaoAviao.x += speedRot * delta * 0.5;
         } else {
-            aviaoHolder.rotation.x = 0;
+            rotacaoAviao.x = 0;
         }
     }
 
     // Testa se a rotação no eixo X saiu do limite + ou -, se saiu ele impede de rodar mais
-    if (aviaoHolder.rotation.x >= maxangle) {
-        aviaoHolder.rotation.x = maxangle;
-    } else if (aviaoHolder.rotation.x <= -maxangle) {
-        aviaoHolder.rotation.x = -maxangle;
+    if (rotacaoAviao.x >= maxangle) {
+        rotacaoAviao.x = maxangle;
+    } else if (rotacaoAviao.x <= -maxangle) {
+        rotacaoAviao.x = -maxangle;
     }
 
 
     if (keyboard.pressed("right")) {
-        aviaoHolder.rotateZ(speedRot * delta);
+        rotacaoAviao.z += speedRot * delta;
     } else if (keyboard.pressed("left")) {
-        aviaoHolder.rotateZ(-speedRot * delta);
+        rotacaoAviao.z -= speedRot * delta;
     } else {
         //volta o valor de z pra zero
-        let rz = Math.round(aviaoHolder.rotation.z * 1000) / 1000;
+        let rz = Math.round(rotacaoAviao.z * 1000) / 1000;
         if (rz > 0) {
-            aviaoHolder.rotateZ(-speedRot * delta * 0.5);
+            rotacaoAviao.z -= speedRot * delta * 0.5;
         } else if (rz < 0) {
-            aviaoHolder.rotateZ(speedRot * delta * 0.5);
+            rotacaoAviao.z += speedRot * delta * 0.5;
         } else {
-            aviaoHolder.rotation.z = 0;
+            rotacaoAviao.z = 0;
         }
     }
 
     // Testa se a rotação no eixo z saiu do limite + ou -, se saiu ele impede de rodar mais
-    if (aviaoHolder.rotation.z >= maxangle) {
-        aviaoHolder.rotation.z = maxangle;
-    } else if (aviaoHolder.rotation.z <= -maxangle) {
-        aviaoHolder.rotation.z = -maxangle;
+    if (rotacaoAviao.z >= maxangle) {
+        rotacaoAviao.z = maxangle;
+    } else if (rotacaoAviao.z <= -maxangle) {
+        rotacaoAviao.z = -maxangle;
     }
 
-    // O que seria a força de empuxo pra cima que o avião sente
-    let forcaEmpuxo = -20;
-    
-    // O deslocamento lateral quando está virando, proporcional a rotação no eixo Z
-    //aviaoHolder.position.x += forcaEmpuxo * Math.sin(aviaoHolder.rotation.z) * delta;
-
     // A rotação no eixo Y proporcional ao quanto está rodando no eixo Z
-    let dy = aviaoHolder.rotation.z * -0.1 * delta;
-    aviaoHolder.rotateY(dy);
+    let dy = rotacaoAviao.z * -0.5 * delta;
+    rotacaoAviao.y += dy;
 
     // Aumenta a velocidade do avião até um certo limite
     if (keyboard.pressed("Q")) {
@@ -231,12 +227,29 @@ function movimentaAviao() {
         }
     }
 
+    aplicaRotacao();
+
     // Aplica translação no avião
     aviaoHolder.translateZ(speed * delta);
 
     // Roda a hélice
     eixo_helice.rotateY(0.5 * speed * delta);
 }
+
+function aplicaRotacao(){
+    // https://threejs.org/docs/#api/en/math/Euler
+    // Converte as rotações pro sistema do Three.js na ordem apropriada
+    var euler = new THREE.Euler( 
+      rotacaoAviao.x, 
+      rotacaoAviao.y, 
+      rotacaoAviao.z, 
+      'YXZ'
+    );
+  
+    // https://threejs.org/docs/#api/en/core/Object3D.setRotationFromEuler
+    // Aplica no holder do avião
+    aviaoHolder.quaternion.setFromEuler (euler);
+  }
 
 
 //////////// Listen window size changes e render///////////////////

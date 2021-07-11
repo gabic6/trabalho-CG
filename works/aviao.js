@@ -5,94 +5,6 @@ import {
     degreesToRadians,
 } from "../libs/util/util.js";
 
-class AviaoHolder extends THREE.Object3D {
-
-    rotation = new THREE.Vector3();
-    position = new THREE.Vector3();
-    translacao = new THREE.Vector3();
-
-    M(x, y, z) {
-        var mat_rot = new THREE.Matrix3();
-        var a = z;
-        var b = -x;
-        var g = y;
-
-        var m11 = Math.cos(a)*Math.cos(g) - Math.sin(a)*Math.cos(b)*Math.sin(g);
-        var m12 = Math.sin(a)*Math.cos(g) + Math.cos(a)*Math.cos(b)*Math.sin(g);
-        var m13 = Math.sin(b)*Math.sin(g);
-
-        var m21 = -Math.cos(a)*Math.cos(g) - Math.sin(a)*Math.cos(b)*Math.sin(g);
-        var m22 = -Math.sin(a)*Math.cos(g) + Math.cos(a)*Math.cos(b)*Math.cos(g);
-        var m23 = Math.sin(b)*Math.cos(g);
-
-        var m31 = Math.sin(a)*Math.sin(b);
-        var m32 = -Math.cos(a)*Math.sin(b);
-        var m33 = Math.cos(b);
-
-        mat_rot.set(
-            m11, m12, m13,
-            m21, m22, m23,
-            m31, m32, m33
-        );
-        return mat_rot; 
-    }
-
-    constructor(){
-        super();
-    }
-
-    setPosition(x, y, z){
-        this.position.set(x, y, z);
-        this._update();
-    }
-
-    setRotation(x, y, z){
-        this.rotation.set(x, y, z);
-        this._update();
-    }
-
-    rotateX(angulo){
-        this.rotation.x += angulo;
-        this._update();
-    }
-
-    rotateY(angulo){
-        this.rotation.y += angulo;
-        this._update();
-    }
-
-    rotateZ(angulo){
-        this.rotation.z += angulo;
-        this._update();
-    }
-
-    translateZ(dz){
-        this.translacao.z = dz;
-    }
-
-    _update(){
-        this.matrixAutoUpdate = false;
-        this.matrix.identity();
-
-        var mat4 = new THREE.Matrix4();
-
-        var novaPosicao = this.translacao.clone();
-        novaPosicao = novaPosicao.applyMatrix3(this.M(this.rotation.x, this.rotation.y, this.rotation.z));
-
-        this.position.x += novaPosicao.x;
-        this.position.y += novaPosicao.y;
-        this.position.z += novaPosicao.z;
-
-        console.log('this.rotation:',this.rotation)
-        console.log('this.position:',this.position)
-
-        this.matrix.multiply(mat4.makeTranslation(this.position.x, this.position.y, this.position.z)); // R1 y
-        this.matrix.multiply(mat4.makeRotationX(this.rotation.x)); // R1 y
-        this.matrix.multiply(mat4.makeRotationY(this.rotation.y)); // R1 y
-        this.matrix.multiply(mat4.makeRotationZ(this.rotation.z)); // R1 y
-    }
-}
-
 export default function aviao() {
     var material_aviao = new THREE.MeshPhongMaterial();
 
@@ -266,8 +178,7 @@ export default function aviao() {
     leme1.add(leme2);
 
     //objeto que armazena o cilindro1(corpo principal do avião)
-    //var aviaoHolder= new THREE.Object3D();
-    var aviaoHolder = new AviaoHolder();
+    var aviaoHolder= new THREE.Object3D();
     var axesHelper = new THREE.AxesHelper(200);
 
     aviaoHolder.add(cilindro1);
