@@ -150,15 +150,20 @@ export default function aviao() {
     cilindro3.add(apoio2);
 
     //cilindro que cola o roda de trás
-    var cilindro2_amarelo = new THREE.CylinderGeometry(0.03,0.03,diametro_cilindro3/4.0,18,18);
+    var cilindro2_amarelo = new THREE.CylinderGeometry(0.03,0.03,(diametro_cilindro3-0.1)/2.0,18,18);
     var cilindro2_rodinhas = new THREE.Mesh(cilindro2_amarelo,material_aviao_yellow);
     cilindro2_rodinhas.castShadow = true;
     cilindro2_rodinhas.rotation.set(0,0,degreesToRadians(90));
-    cilindro2_rodinhas.position.set(-diametro_cilindro3/8.0,-diametro_cilindro3/.0,-diametro_cilindro3);//set(-0.3,-0.15,0);
+    cilindro2_rodinhas.position.set(-diametro_cilindro3/8.0,-0.2,0.05);//set(-0.3,-0.15,0);
     apoio1.add(cilindro2_rodinhas);
 
     //rodinha de trás
-
+    const geometria_torus1 = new THREE.TorusGeometry(0.10, 0.15, 30, 80);
+    const torus3 = new THREE.Mesh( geometria_torus1, material_aviao_borracha);
+    torus3.castShadow = true;
+    torus3.rotation.set(degreesToRadians(90),0,0);
+    torus3.position.set(0,0,0);
+    cilindro2_rodinhas.add( torus3 );
     //asas maiores
     var altura_asas_maiores = 0.1;
     var largura_asas_maiores = 11.0;
