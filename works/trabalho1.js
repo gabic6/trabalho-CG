@@ -16,6 +16,7 @@ import {
 import KeyboardState from '../../libs/util/KeyboardState.js';
 import aviao from './aviao.js';
 import ambiente from './ambiente.js';
+import checkpoints, { checaColisao,caminho } from './caminho_checkpoint.js';
 
 ////////// Coisas da cena, como renderização, camera/////////////////////
 
@@ -173,6 +174,15 @@ let meshes = ambiente();
 for(let i=0; i<meshes.length; i++){
     scene.add(meshes[i]);
 }
+
+// Adiciona os checkpoints
+let checkpoint_meshes = checkpoints();
+for(let i=0; i<checkpoint_meshes.length; i++){
+    scene.add(checkpoint_meshes[i]);
+}
+//Caminho
+let caminho_curva = caminho();
+scene.add(caminho_curva);
 
 //////////// Avião ////////////////
 
@@ -393,6 +403,7 @@ function render() {
     // Só movimenta o avião se estiver no modo simulação
     if (!modoInspecaoAtivo) {
         movimentaAviao();
+        checaColisao(aviaoHolder);
     }
 
     alternaModo();

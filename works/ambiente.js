@@ -32,7 +32,7 @@ function geraMontanha(){
   }
   //var localPoints = generatePoints(20);
 
-  function gerarPontosCone(){
+  /*function gerarPontosCone(){
     var coneGeometry = new THREE.ConeGeometry( 20, 50, 5, 5 );
     coneGeometry.deleteAttribute( 'normal' );
     coneGeometry.deleteAttribute( 'uv' );
@@ -69,7 +69,214 @@ function geraMontanha(){
   mesh.receiveShadow = true;
   mesh.position.set(40,25,10);
   //scene.add( mesh );
-  return mesh;
+  return mesh;*/
+
+  function gerarPontosCone(raio, altura){
+    var coneGeometry = new THREE.ConeGeometry( raio, altura, 5, 5 );
+    coneGeometry.deleteAttribute( 'normal' );
+    coneGeometry.deleteAttribute( 'uv' );
+    coneGeometry = BufferGeometryUtils.mergeVertices( coneGeometry );
+
+    var vertices = [];
+    var positionAttribute = coneGeometry.getAttribute( 'position' );
+
+    for ( let i = 0; i < positionAttribute.count; i ++ ) {
+
+      const vertex = new THREE.Vector3();
+      vertex.fromBufferAttribute( positionAttribute, i );
+      vertices.push( vertex );
+    }
+
+    return vertices;
+  }
+
+  //// MONTANHA 1 ////
+  
+  // objeto 1
+  var m1g1 = gerarPontosCone(20, 50);
+
+  m1g1[0].x += 8;
+  m1g1[0].y -= 4;
+  m1g1[0].z += 5;
+
+  m1g1[9].z += 7;
+
+  m1g1[10].z += 5;
+
+  m1g1[25].z += 7;
+
+  m1g1[15].z -= 4;
+
+  m1g1[20].z -= 3;
+
+  m1g1[21].x += 4;
+  m1g1[21].y += 3;
+
+  m1g1[16].y -= 2;
+
+  //m1g1[11].x += 10;
+
+  m1g1[2].y += 4;
+
+  m1g1[7].x += 7;
+  m1g1[7].y += 8;
+  m1g1[7].z += 4;
+
+  m1g1[24].x -= 2;
+  m1g1[24].z += 3;
+
+  m1g1[23].x -= 4;
+  m1g1[23].z -= 7;
+
+  m1g1[13].x += 5;
+
+  m1g1[4].x += 9;
+  m1g1[4].z += 7;
+
+  m1g1[3].x -= 3;
+  m1g1[3].z += 4;
+
+  m1g1[19].x += 5;
+  m1g1[19].y += 3;
+  m1g1[19].z -= 2;
+
+  m1g1[14].x += 10;
+  m1g1[14].z += 9;
+
+  m1g1[25].x -= 6;
+
+  m1g1[10].x += 5;
+
+  m1g1[6].x += 4;
+  m1g1[6].z += 13;
+
+  //console.log('m1g1',m1g1)
+
+  const geom_m1Obj1 = new ConvexGeometry( m1g1 );
+  const mat_m1Obj1 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
+  const m1Obj1 = new THREE.Mesh( geom_m1Obj1, mat_m1Obj1 );
+  m1Obj1.castShadow = true;
+  m1Obj1.receiveShadow = true;
+  m1Obj1.position.set(40,25,10);
+  //m1Obj1.scale.set( 1.5, 1.5, 1.5 );
+
+
+  // objeto 2
+  var m1g2 = gerarPontosCone(15, 30);
+
+
+  m1g2[0].x += 10;
+  m1g2[0].y -= 9;
+  m1g2[0].z -= 5;
+
+  m1g2[9].x += 6;
+  m1g2[9].z -= 2;
+
+  m1g2[7].x += 12;
+  m1g2[7].z -= 5;
+
+  m1g2[11].y += 5;
+  m1g2[11].z -= 8;
+
+  m1g2[1].x += 9;
+
+  m1g2[21].x -= 4;
+  m1g2[21].y -= 2;
+
+  m1g2[25].x -= 10;
+  m1g2[25].z += 7;
+
+  m1g2[23].x -= 7;
+  m1g2[23].y += 4;
+
+  m1g2[24].x -= 7;
+  m1g2[24].y += 3;
+  m1g2[24].z -= 5;
+
+  m1g2[20].x -= 5;
+  m1g2[20].z -= 9;
+
+  m1g2[15].x += 7;
+  m1g2[15].z -= 4;
+
+  m1g2[14].x -= 8;
+  m1g2[14].y += 9;
+  m1g2[14].z -= 8;
+
+  m1g2[17].x -= 8;
+  m1g2[17].y += 2;
+  m1g2[17].z -= 10;
+
+  //console.log('m1g2',m1g2)
+
+  const geom_m1Obj2 = new ConvexGeometry( m1g2 );
+  const mat_m1Obj2 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
+  const m1Obj2 = new THREE.Mesh( geom_m1Obj2, mat_m1Obj2 );
+  m1Obj2.castShadow = true;
+  m1Obj2.receiveShadow = true;
+  //m1Obj2.position.set(-5,-10,-11);
+  m1Obj2.position.set(25,-10,-2);
+  m1Obj1.add(m1Obj2);
+
+
+// objeto 3
+var m1g3 = gerarPontosCone(15, 20);
+
+m1g3[0].x -= 3;
+m1g3[0].y += 2;
+m1g3[0].z -= 3;
+
+m1g3[1].x += 6;
+m1g3[1].y -= 1;
+m1g3[1].z -= 17;
+
+m1g3[2].x += 5;
+m1g3[2].y += 2;
+m1g3[2].z += 3;
+
+m1g3[11].x += 3;
+m1g3[11].y += 2;
+m1g3[11].z += 10;
+
+m1g3[10].x += 7;
+m1g3[10].z += 8;
+
+m1g3[8].x += 7;
+m1g3[8].y += 7;
+m1g3[8].z += 7;
+
+m1g3[14].x += 3;
+m1g3[14].y += 4;
+m1g3[14].z -= 9;
+
+m1g3[15].x += 6;
+m1g3[15].z -= 7;
+
+m1g3[25].x += 4;
+
+m1g3[24].x += 8;
+m1g3[24].y += 3;
+m1g3[24].z += 9;
+
+m1g3[12].x += 11;
+m1g3[12].y += 4;
+m1g3[12].z += 6;
+
+m1g3[6].x += 12;
+m1g3[6].z -= 11;
+
+
+//console.log('m1g3',m1g3)
+
+const geom_m1Obj3 = new ConvexGeometry( m1g3 );
+const mat_m1Obj3 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
+const m1Obj3 = new THREE.Mesh( geom_m1Obj3, mat_m1Obj3 );
+m1Obj3.castShadow = true;
+m1Obj3.receiveShadow = true;
+m1Obj3.position.set(0,-5,-22);
+m1Obj2.add(m1Obj3);  
+
+  return m1Obj1;
 }
 
 
