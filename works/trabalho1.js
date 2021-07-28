@@ -16,7 +16,12 @@ import {
 import KeyboardState from '../../libs/util/KeyboardState.js';
 import aviao from './aviao.js';
 import ambiente from './ambiente.js';
-import checkpoints, { checaColisao,caminho } from './caminho_checkpoint.js';
+import checkpoints, { 
+    checaColisao,
+    caminho,
+    registraTimestampInspecao,
+    ocultaInfoBox
+} from './caminho_checkpoint.js';
 
 ////////// Coisas da cena, como renderização, camera/////////////////////
 
@@ -26,11 +31,11 @@ var renderer = initRenderer();    // View function in util/utils
 var camera = initCamera(new THREE.Vector3(5.0, 5.0, 30.0)); // Init camera in this position
 var trackballControls = new TrackballControls(camera, renderer.domElement);
 trackballControls.enabled = false;
-//initDefaultBasicLight(scene);
-document.body.appendChild(stats.dom);
 
-/*const light = new THREE.HemisphereLight('rgb(179, 217, 255)', 'rgb(89, 179, 0)', 1);
-scene.add(light);*/
+document.body.appendChild(stats.dom);
+camera.far = 10000;
+camera.updateProjectionMatrix();
+
 const light = new THREE.HemisphereLight('rgb(255, 255, 255)', 'rgb(47, 79, 79)', 0.5);
 scene.add(light);
 scene.background = new THREE.Color('rgb(179, 217, 255)');
@@ -63,7 +68,7 @@ function setDirectionalLighting(position)
   dirLight.shadow.mapSize.height = 1024;
   dirLight.castShadow = true;
   
-  var d = 40;
+  var d = 20;
   dirLight.shadow.camera.near = 1;
   dirLight.shadow.camera.far = 8000;
   dirLight.shadow.camera.left = -d;
@@ -89,39 +94,66 @@ setDirectionalLighting(lightPosition);
 function updateLightPosition()
 {
     dirLightHolder.position.copy(lightPosition);
-    //cube.position.copy(lightPosition);
-
-    //cameraSimulaHolderHolder.rotation.y = rotacaoAviao.y;
 }
 
-// ///////////// Cubos de debug ///////////////
+//////////////// Luz com sombra estática para as arvores e montanhas ////////////////////
 
-// var cubeGeometry = new THREE.BoxGeometry(4.0, 4.0, 4.0);
-// var cubeMaterial = new THREE.MeshLambertMaterial();
-// var i=0;
-// for(i=-4000;i<4000;i+=10) {
-//     var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-//     // position the cube
-//     cube.position.set(i, 15, i*4.0);
-//     // add the cube to the scene
-//     cube.castShadow=true;
-//     cube.receiveShadow=true;
-//     scene.add(cube);
-// }
+function criaLuzDirecionalComSombraEstatica(scene_ref, x, z, d_shadow) {
+    // Cria luz
+    var light = new THREE.DirectionalLight(lightColor);
+    var lightHolder = new THREE.Object3D();
+    var ligthTargetHolder = new THREE.Object3D();
 
-// var cubeGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-// var cubeMaterial = new THREE.MeshLambertMaterial();
-// var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-// cube.position.set(15, 5, 15);
-// //cube.receiveShadow=true;
-// cube.castShadow=true;
-// scene.add(cube);
+    //Configura a luz
+    light.target = ligthTargetHolder;
+    light.shadow.mapSize.width = 5000;
+    light.shadow.mapSize.height = 5000;
+    light.castShadow = true;
+    light.shadow.autoUpdate = false;
+    light.shadow.needsUpdate = true;
+    light.shadow.camera.near = 1;
+    light.shadow.camera.far = 800;
+    light.shadow.camera.left = -d_shadow;
+    light.shadow.camera.right = d_shadow;
+    light.shadow.camera.top = d_shadow;
+    light.shadow.camera.bottom = -d_shadow;
+    light.visible = true;
+    light.intensity = 0.01;
+    light.decay = 1;
+    light.penumbra = 0.1;
 
-// var planeGeometryGambiarra = new THREE.PlaneGeometry(40, 40, 80, 80);
-// planeGeometryGambiarra.translate(0.0, 0.0, 0.02);
-// var planeMaterialGambiarra = new THREE.MeshLambertMaterial({
-//     color:'rgb(89, 179, 50)',
-// });
+    // Posição da luz em relação ao holder dela
+    light.position.copy(lightHolderPosition);
+    lightHolder.add(light);
+    scene_ref.add(lightHolder);
+
+    // Posição do holder
+    lightHolder.position.set(x, 0, z);
+
+    // Helpers de visualização da luz e da camera de projeção de sombras
+    // const helper = new THREE.DirectionalLightHelper(light, 5);
+    // const helper2 = new THREE.CameraHelper(light.shadow.camera);
+    // scene_ref.add(helper);
+    // scene_ref.add(helper2);
+
+    // Cria o holder pra onde a luz vai estar apontada
+    ligthTargetHolder.position.set(
+        x,
+        1.0,
+        z
+    );
+
+    scene_ref.add(ligthTargetHolder);
+}
+
+// Cria as 4 luzes, uma em cada quadrante do plano pra projeção das 
+// sombras estáticas
+let dimensaoLuz = 1000;
+let raioLuz = dimensaoLuz/2.0;
+criaLuzDirecionalComSombraEstatica(scene, -raioLuz, raioLuz, raioLuz );
+criaLuzDirecionalComSombraEstatica(scene, -raioLuz, -raioLuz, raioLuz );
+criaLuzDirecionalComSombraEstatica(scene, raioLuz, -raioLuz, raioLuz );
+criaLuzDirecionalComSombraEstatica(scene, raioLuz, raioLuz, raioLuz );
 
 /////////// Câmera simulação //////////////////
 
@@ -150,18 +182,15 @@ cameraPiloto.position.set(0.0, 1.3, -1.8);
 
 // Show world axes
 var axesHelper = new THREE.AxesHelper(200);
+scene.add(axesHelper);
 
 ////////////// Objetos /////////////////////
 
 // create the ground plane
-// var planeGeometry = createGroundPlaneWired(8000, 8000, 200, 200, 'green');
-// scene.add(planeGeometry);
-scene.add(axesHelper);
-var planeGeometry = new THREE.PlaneGeometry(8000, 8000, 800, 800);
+var planeGeometry = new THREE.PlaneGeometry(2000, 2000, 800, 800);
 planeGeometry.translate(0.0, 0.0, 0.0);
 var planeMaterial = new THREE.MeshLambertMaterial({
     color:'rgb(89, 179, 0)',
-    //  "rgb(150, 150, 150)"
     //side: THREE.DoubleSide
 });
 var plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -170,16 +199,13 @@ plane.receiveShadow = true;
 scene.add(plane);
 
 // Adiciona os meshes do ambiente (arvores e montanhas)
-let meshes = ambiente();
-for(let i=0; i<meshes.length; i++){
-    scene.add(meshes[i]);
-}
+let ambienteHolder = ambiente();
+scene.add(ambienteHolder);
 
 // Adiciona os checkpoints
-let checkpoint_meshes = checkpoints();
-for(let i=0; i<checkpoint_meshes.length; i++){
-    scene.add(checkpoint_meshes[i]);
-}
+let checkpointHolder = checkpoints();
+scene.add(checkpointHolder);
+
 //Caminho
 let caminho_curva = caminho();
 scene.add(caminho_curva);
@@ -193,9 +219,19 @@ var rotacaoAviao = new THREE.Vector3();
 // Obtem o avião do arquivo separado
 var { aviaoHolder, eixo_helice } = aviao();
 
+// Mantem o avião invisível no primeiro render pra não
+// gerar uma sombra fixa no chão
+aviaoHolder.visible=false;
+
 // Adiciona o avião na cena e o posiciona
 scene.add(aviaoHolder);
-aviaoHolder.position.set(0.0, 20.0, 0.0);
+aviaoHolder.position.set(0.0, 1.0, 0.0);//0,20.0,0
+
+// Cria um boxHelper pra poder visualizar a area de colisão do avião
+// const box_1 = new THREE.Box3();
+// box_1.setFromObject(aviaoHolder);
+// const helper = new THREE.Box3Helper( box_1, 0xffff00 );
+// scene.add( helper );
 
 // Define que a luz direcional vai iluminar o avião
 dirLight.target = aviaoHolder;
@@ -206,6 +242,7 @@ aviaoHolder.add(cameraPiloto);
 // Define a posição da câmera em relação ao centróide do avião
 var cameraPosition = new THREE.Vector3(0.0, 8.0, -20.0);
 
+
 ///////////// Modos de câmera /////////////////////
 
 function alternaModo() {
@@ -215,8 +252,20 @@ function alternaModo() {
     if (keyboard.down("space")) {
         modoInspecaoAtivo = !modoInspecaoAtivo;
 
-        //Esconde o plano no modo inspeção
+        // Esconde o plano no modo inspeção
         plane.visible = modoInspecaoAtivo === false;
+        // Eesconde caminho no modo de inspeção
+        caminho_curva.visible = modoInspecaoAtivo===false;
+        // Esconde os elementos do ambiente no modo de inspeção
+        ambienteHolder.visible = modoInspecaoAtivo===false;
+        // Esconde os checkpoints no modo de inspeção
+        checkpointHolder.visible = modoInspecaoAtivo===false;
+ 
+        // Esconde infobox do tempo
+        ocultaInfoBox(modoInspecaoAtivo);
+
+        // Registra timestamp de inspeção pra excluir o tempo em inspeção do timer
+        registraTimestampInspecao();
 
         if (modoInspecaoAtivo) {
             trackballControls.enabled = true;
@@ -267,7 +316,7 @@ function alternaModo() {
     
     
     // Desloca a luz no plano paralelo ao chão
-    dirLightHolder.rotation.y = rotacaoAviao.y;//+ degreesToRadians(180);
+    //dirLightHolder.rotation.y = rotacaoAviao.y;//+ degreesToRadians(180);
 
     lightPosition.set(
         aviaoHolder.position.x,
@@ -275,13 +324,16 @@ function alternaModo() {
         aviaoHolder.position.z
     )
     updateLightPosition();
+
+    //Atualiza o boxHelper do avião
+    //box_1.setFromObject(aviaoHolder);
 }
 
 ///////////////////// Movimentação /////////////////////
 
 var delta = clock.getDelta();
 var speedRot = THREE.Math.degToRad(45);
-var speed = 50; // m/s
+var speed = 0; // m/s     //50
 var aceleracao = 10;
 var velocidadeMaxima = 70; // m/s
 var maxangle = degreesToRadians(45);
@@ -362,8 +414,23 @@ function movimentaAviao() {
     // Aplica translação no avião
     aviaoHolder.translateZ(speed * delta);
 
+    // Impede que o avião "entre" no chão
+    if(aviaoHolder.position.y < 1.0){
+        aviaoHolder.position.set(
+            aviaoHolder.position.x,
+            1.0,
+            aviaoHolder.position.z
+        )
+    }
+
     // Roda a hélice
     eixo_helice.rotateY(0.5 * speed * delta);
+
+    //Caminho visualização
+    if(keyboard.down("enter")){
+        liga_Caminho=!liga_Caminho;
+        caminho_curva.visible=liga_Caminho;
+    };
 }
 
 function aplicaRotacao(){
@@ -390,7 +457,9 @@ window.addEventListener('resize', function () {
         onWindowResize(cameraSimula, renderer);
     }
 }, false);
+
 render();
+var liga_Caminho =true;
 
 function render() {
     stats.update(); // Update FPS
@@ -416,5 +485,14 @@ function render() {
     } else {
         renderer.render(scene, cameraSimula) // Render scene
     }
+
     stats.end();
+
+    // Coloca o avião como visível no segundo render da cena
+    // já que no primeiro render ele faz as sombras estáticas
+    // Isso é feito pra não ter uma sombra estática do avião presa
+    // no chão.
+    if(!aviaoHolder.visible){
+        aviaoHolder.visible=true;
+    }
 }

@@ -18,58 +18,6 @@ import aviao from './aviao.js';
 ///////////// montanhas /////////////////
 
 function geraMontanha(){
-  function generatePoints(numberOfPoints) {
-    var points = [];
-    var maxSize = 50;
-    for (var i = 0; i < numberOfPoints; i++) {
-      var randomX = Math.round(-maxSize + Math.random() * maxSize * 2);
-      var randomY = Math.round(0.1 + Math.random() * maxSize);
-      var randomZ = Math.round(-maxSize + Math.random() * maxSize * 2);
-
-      points.push(new THREE.Vector3(randomX, randomY, randomZ));
-    }
-    return points;
-  }
-  //var localPoints = generatePoints(20);
-
-  /*function gerarPontosCone(){
-    var coneGeometry = new THREE.ConeGeometry( 20, 50, 5, 5 );
-    coneGeometry.deleteAttribute( 'normal' );
-    coneGeometry.deleteAttribute( 'uv' );
-    coneGeometry = BufferGeometryUtils.mergeVertices( coneGeometry );
-
-    var vertices = [];
-    var positionAttribute = coneGeometry.getAttribute( 'position' );
-
-    for ( let i = 0; i < positionAttribute.count; i ++ ) {
-
-      const vertex = new THREE.Vector3();
-      vertex.fromBufferAttribute( positionAttribute, i );
-      vertices.push( vertex );
-    }
-
-    return vertices;
-  }
-
-  var localPoints = gerarPontosCone();
-
-  localPoints[20].x += 5;
-  localPoints[5].x -= 5;
-
-  console.log('localPoints',localPoints)
-  // Then, build the convex geometry with the generated points
-  //convexGeometry = new THREE.ConvexBufferGeometry(localPoints);
-
-  console.log('THREE.ConvexGeometry', ConvexGeometry)
-
-  const geometry = new ConvexGeometry( localPoints );
-  const material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
-  const mesh = new THREE.Mesh( geometry, material );
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  mesh.position.set(40,25,10);
-  //scene.add( mesh );
-  return mesh;*/
 
   function gerarPontosCone(raio, altura){
     var coneGeometry = new THREE.ConeGeometry( raio, altura, 5, 5 );
@@ -95,62 +43,42 @@ function geraMontanha(){
   // objeto 1
   var m1g1 = gerarPontosCone(20, 50);
 
-  m1g1[0].x += 8;
-  m1g1[0].y -= 4;
-  m1g1[0].z += 5;
+  m1g1[0].x += 8;     m1g1[0].y -= 4;     m1g1[0].z += 5;
 
   m1g1[9].z += 7;
 
-  m1g1[10].z += 5;
+  m1g1[10].x += 5;    m1g1[10].z += 5;
 
-  m1g1[25].z += 7;
+  m1g1[25].x -= 6;    m1g1[25].z += 7;
 
   m1g1[15].z -= 4;
 
   m1g1[20].z -= 3;
 
-  m1g1[21].x += 4;
-  m1g1[21].y += 3;
+  m1g1[21].x += 4;     m1g1[21].y += 3;
 
   m1g1[16].y -= 2;
 
-  //m1g1[11].x += 10;
-
   m1g1[2].y += 4;
 
-  m1g1[7].x += 7;
-  m1g1[7].y += 8;
-  m1g1[7].z += 4;
+  m1g1[7].x += 7;     m1g1[7].y += 8;     m1g1[7].z += 4;
 
-  m1g1[24].x -= 2;
-  m1g1[24].z += 3;
+  m1g1[24].x -= 2;     m1g1[24].z += 3;
 
   m1g1[23].x -= 4;
   m1g1[23].z -= 7;
 
   m1g1[13].x += 5;
 
-  m1g1[4].x += 9;
-  m1g1[4].z += 7;
+  m1g1[4].x += 9;     m1g1[4].z += 7;
 
-  m1g1[3].x -= 3;
-  m1g1[3].z += 4;
+  m1g1[3].x -= 3;     m1g1[3].z += 4;
 
-  m1g1[19].x += 5;
-  m1g1[19].y += 3;
-  m1g1[19].z -= 2;
+  m1g1[19].x += 5;     m1g1[19].y += 3;     m1g1[19].z -= 2;
 
-  m1g1[14].x += 10;
-  m1g1[14].z += 9;
+  m1g1[14].x += 10;     m1g1[14].z += 9;  
 
-  m1g1[25].x -= 6;
-
-  m1g1[10].x += 5;
-
-  m1g1[6].x += 4;
-  m1g1[6].z += 13;
-
-  //console.log('m1g1',m1g1)
+  m1g1[6].x += 4;     m1g1[6].z += 13;
 
   const geom_m1Obj1 = new ConvexGeometry( m1g1 );
   const mat_m1Obj1 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
@@ -158,115 +86,71 @@ function geraMontanha(){
   m1Obj1.castShadow = true;
   m1Obj1.receiveShadow = true;
   m1Obj1.position.set(40,25,10);
-  //m1Obj1.scale.set( 1.5, 1.5, 1.5 );
-
 
   // objeto 2
   var m1g2 = gerarPontosCone(15, 30);
 
 
-  m1g2[0].x += 10;
-  m1g2[0].y -= 9;
-  m1g2[0].z -= 5;
+  m1g2[0].x += 10;     m1g2[0].y -= 9;     m1g2[0].z -= 5;
 
-  m1g2[9].x += 6;
-  m1g2[9].z -= 2;
+  m1g2[9].x += 6;     m1g2[9].z -= 2;
 
-  m1g2[7].x += 12;
-  m1g2[7].z -= 5;
+  m1g2[7].x += 12;     m1g2[7].z -= 5;
 
-  m1g2[11].y += 5;
-  m1g2[11].z -= 8;
+  m1g2[11].y += 5;     m1g2[11].z -= 8;
 
   m1g2[1].x += 9;
 
-  m1g2[21].x -= 4;
-  m1g2[21].y -= 2;
+  m1g2[21].x -= 4;     m1g2[21].y -= 2;
 
-  m1g2[25].x -= 10;
-  m1g2[25].z += 7;
+  m1g2[25].x -= 10;     m1g2[25].z += 7;
 
-  m1g2[23].x -= 7;
-  m1g2[23].y += 4;
+  m1g2[23].x -= 7;     m1g2[23].y += 4;
 
-  m1g2[24].x -= 7;
-  m1g2[24].y += 3;
-  m1g2[24].z -= 5;
+  m1g2[24].x -= 7;     m1g2[24].y += 3;     m1g2[24].z -= 5;
 
-  m1g2[20].x -= 5;
-  m1g2[20].z -= 9;
+  m1g2[20].x -= 5;     m1g2[20].z -= 9;
 
-  m1g2[15].x += 7;
-  m1g2[15].z -= 4;
+  m1g2[15].x += 7;     m1g2[15].z -= 4;
 
-  m1g2[14].x -= 8;
-  m1g2[14].y += 9;
-  m1g2[14].z -= 8;
+  m1g2[14].x -= 8;     m1g2[14].y += 9;     m1g2[14].z -= 8;
 
-  m1g2[17].x -= 8;
-  m1g2[17].y += 2;
-  m1g2[17].z -= 10;
-
-  //console.log('m1g2',m1g2)
+  m1g2[17].x -= 8;     m1g2[17].y += 2;     m1g2[17].z -= 10;
 
   const geom_m1Obj2 = new ConvexGeometry( m1g2 );
   const mat_m1Obj2 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
   const m1Obj2 = new THREE.Mesh( geom_m1Obj2, mat_m1Obj2 );
   m1Obj2.castShadow = true;
   m1Obj2.receiveShadow = true;
-  //m1Obj2.position.set(-5,-10,-11);
   m1Obj2.position.set(25,-10,-2);
   m1Obj1.add(m1Obj2);
-
 
 // objeto 3
 var m1g3 = gerarPontosCone(15, 20);
 
-m1g3[0].x -= 3;
-m1g3[0].y += 2;
-m1g3[0].z -= 3;
+m1g3[0].x -= 3;   m1g3[0].y += 2;   m1g3[0].z -= 3;
 
-m1g3[1].x += 6;
-m1g3[1].y -= 1;
-m1g3[1].z -= 17;
+m1g3[1].x += 6;   m1g3[1].y -= 1;   m1g3[1].z -= 17;
 
-m1g3[2].x += 5;
-m1g3[2].y += 2;
-m1g3[2].z += 3;
+m1g3[2].x += 5;   m1g3[2].y += 2;   m1g3[2].z += 3;
 
-m1g3[11].x += 3;
-m1g3[11].y += 2;
-m1g3[11].z += 10;
+m1g3[11].x += 3;   m1g3[11].y += 2;   m1g3[11].z += 10;
 
-m1g3[10].x += 7;
-m1g3[10].z += 8;
+m1g3[10].x += 7;   m1g3[10].z += 8;
 
-m1g3[8].x += 7;
-m1g3[8].y += 7;
-m1g3[8].z += 7;
+m1g3[8].x += 7;   m1g3[8].y += 7;   m1g3[8].z += 7;
 
-m1g3[14].x += 3;
-m1g3[14].y += 4;
-m1g3[14].z -= 9;
+m1g3[14].x += 3;   m1g3[14].y += 4;   m1g3[14].z -= 9;
 
-m1g3[15].x += 6;
-m1g3[15].z -= 7;
+m1g3[15].x += 6;   m1g3[15].z -= 7;
 
 m1g3[25].x += 4;
 
-m1g3[24].x += 8;
-m1g3[24].y += 3;
-m1g3[24].z += 9;
+m1g3[24].x += 8;   m1g3[24].y += 3;   m1g3[24].z += 9;
 
-m1g3[12].x += 11;
-m1g3[12].y += 4;
-m1g3[12].z += 6;
+m1g3[12].x += 11;   m1g3[12].y += 4;   m1g3[12].z += 6;
 
-m1g3[6].x += 12;
-m1g3[6].z -= 11;
-
-
-//console.log('m1g3',m1g3)
+m1g3[6].x += 12;   m1g3[6].z -= 11;
 
 const geom_m1Obj3 = new ConvexGeometry( m1g3 );
 const mat_m1Obj3 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
@@ -274,9 +158,182 @@ const m1Obj3 = new THREE.Mesh( geom_m1Obj3, mat_m1Obj3 );
 m1Obj3.castShadow = true;
 m1Obj3.receiveShadow = true;
 m1Obj3.position.set(0,-5,-22);
-m1Obj2.add(m1Obj3);  
+m1Obj2.add(m1Obj3);
 
-  return m1Obj1;
+m1Obj1.scale.set( 6, 6, 6 );
+m1Obj1.position.set(150,150,800);
+m1Obj1.rotation.set(0, (2*Math.PI)/3, 0);
+
+
+//// MONTANHA 2 ////
+  
+// objeto 1
+var m2g1 = gerarPontosCone(20, 40);
+
+m2g1[0].x -= 6;   m2g1[0].y += 5;   m2g1[0].z += 7;
+
+m2g1[2].x += 5;   m2g1[2].z += 6;
+
+m2g1[9].y -= 10;   m2g1[9].z += 18;
+
+m2g1[25].x -= 14;   m2g1[25].y -= 10;   m2g1[25].z += 11;
+
+m2g1[7].x -= 12;   m2g1[7].y += 6;   m2g1[7].z += 14;
+
+m2g1[5].x += 2;   m2g1[5].y += 7;   m2g1[5].z += 16;
+
+m2g1[3].x += 15;   m2g1[3].z += 8;
+
+m2g1[17].x -= 8;
+
+m2g1[22].x -= 20;   m2g1[22].y -= 7;   m2g1[22].z += 8;
+
+m2g1[10].y -= 10;
+
+m2g1[15].y -= 10;
+
+m2g1[20].y -= 10;
+
+const geom_m2Obj1 = new ConvexGeometry( m2g1 );
+const mat_m2Obj1 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
+const m2Obj1 = new THREE.Mesh( geom_m2Obj1, mat_m2Obj1 );
+m2Obj1.castShadow = true;
+m2Obj1.receiveShadow = true;
+m2Obj1.position.set(-40,30,10);
+
+// objeto 2
+  var m2g2 = gerarPontosCone(15, 30);
+
+  m2g2[0].x += 6;     m2g2[0].y += 2;     m2g2[0].z -= 7;
+
+  m2g2[1].x += 5;     m2g2[1].z -= 6;
+
+  m2g2[21].x -= 4;    m2g2[21].z -= 5;
+
+  m2g2[2].x += 8;     m2g2[2].y += 5;     m2g2[2].z -= 6;
+
+  m2g2[3].x += 5;     m2g2[3].y += 5;     m2g2[3].z += 4;
+
+  m2g2[20].x -= 8;     m2g2[20].z -= 5;
+
+  m2g2[25].x += 3;     m2g2[25].z += 9;
+
+  m2g2[15].z += 5;
+
+  m2g2[24].x -= 7;     m2g2[24].z -= 5;
+
+  m2g2[23].x -= 4;     m2g2[23].y += 4;     m2g2[23].z += 7;
+
+  m2g2[10].x += 5;     m2g2[10].z -= 5;
+
+  m2g2[4].x += 10;     m2g2[4].z += 3;
+
+  const geom_m2Obj2 = new ConvexGeometry( m2g2 );
+  const mat_m2Obj2 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
+  const m2Obj2 = new THREE.Mesh( geom_m2Obj2, mat_m2Obj2 );
+  m2Obj2.castShadow = true;
+  m2Obj2.receiveShadow = true;
+  m2Obj2.position.set(-11,-15,35);
+  m2Obj1.add(m2Obj2);
+
+  m2Obj1.scale.set( 3, 3, 3 );
+  m2Obj1.position.set(350,90,-80);
+
+
+//// MONTANHA 3 ////
+  
+// objeto 1
+var m3g1 = gerarPontosCone(25, 40);
+
+m3g1[0].x += 2;   m3g1[0].y -= 3;   m3g1[0].z -= 7;
+
+m3g1[1].y -= 2;
+
+m3g1[2].y -= 2;
+
+m3g1[21].y -= 2;
+
+m3g1[5].x += 6;
+
+m3g1[9].x -= 5;   m3g1[9].y -= 5;
+
+m3g1[13].x += 6;   m3g1[13].z -= 7;
+
+m3g1[12].x += 9;   m3g1[12].y -= 4;   m3g1[12].z += 3;
+
+m3g1[18].x -= 7;   m3g1[18].z += 6;
+
+m3g1[19].x -= 6;   m3g1[19].z += 4;
+
+m3g1[20].x -= 1;   m3g1[20].y -= 5;   m3g1[20].z -= 2;
+
+m3g1[17].x += 4;   m3g1[17].z -= 10;
+
+m3g1[15].x += 3;   m3g1[15].y -= 5;   m3g1[15].z -= 3;
+
+m3g1[14].x -= 4;   m3g1[14].z -= 8;
+
+m3g1[24].x += 9;   m3g1[24].z += 12;
+
+m3g1[10].x -= 4;   m3g1[10].y -= 5;   m3g1[10].z += 4;
+
+m3g1[25].y -= 5;
+
+const geom_m3Obj1 = new ConvexGeometry( m3g1 );
+const mat_m3Obj1 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
+const m3Obj1 = new THREE.Mesh( geom_m3Obj1, mat_m3Obj1 );
+m3Obj1.castShadow = true;
+m3Obj1.receiveShadow = true;
+m3Obj1.position.set(-15,25,30);
+  
+// objeto 2
+var m3g2 = gerarPontosCone(15, 25);
+
+m3g2[0].x -= 4;   m3g2[0].y -= 3.5;   m3g2[0].z -= 2;
+
+m3g2[13].x += 4;   m3g2[13].z += 3;
+
+m3g2[22].x -= 2;   m3g2[22].z -= 2;
+
+m3g2[24].x += 2;   m3g2[24].y += 3;   m3g2[24].z += 3;
+
+m3g2[9].x -= 3;   m3g2[9].y -= 3;
+
+m3g2[7].y -= 1;   m3g2[7].z += 1;
+
+m3g2[2].x += 2;
+
+m3g2[11].y -= 3;   m3g2[11].z -= 3;
+
+m3g2[16].x += 2;   m3g2[16].y -= 0.5;
+
+m3g2[17].x -= 3;   m3g2[17].y -= 3;   m3g2[17].z -= 8;
+
+m3g2[20].x += 2;   m3g2[20].y -= 3;   m3g2[20].z -= 3;
+
+m3g2[19].x -= 4;   m3g2[19].z += 6;
+
+m3g2[4].x += 1;   m3g2[4].y -= 2;   m3g2[4].z += 6;
+
+m3g2[10].y -= 3;
+
+m3g2[15].y -= 3;
+
+m3g2[25].y -= 3;
+
+const geom_m3Obj2 = new ConvexGeometry( m3g2 );
+const mat_m3Obj2 = new THREE.MeshLambertMaterial( { color: 'rgb(82, 43, 5)' } );
+const m3Obj2 = new THREE.Mesh( geom_m3Obj2, mat_m3Obj2 );
+m3Obj2.castShadow = true;
+m3Obj2.receiveShadow = true;
+m3Obj2.scale.set(1.25, 1.25, 1.25); 
+m3Obj2.position.set(24,-5.625,-6);
+m3Obj1.add(m3Obj2);
+
+m3Obj1.scale.set( 4, 4, 4 );
+m3Obj1.position.set(-500,100,-150);
+
+  return {m1Obj1, m2Obj1, m3Obj1};
 }
 
 
@@ -287,8 +344,8 @@ function arvoreModelo1(x, z) {
   var material_tronco = new THREE.MeshLambertMaterial({ color: '#AD3409' });
   var material_folhagem = new THREE.MeshLambertMaterial({ color: '#66AD34' });
 
-  let altura_tronco = 3.0;
-  let raio_folhagem = 1.5;
+  let altura_tronco = 9.0;
+  let raio_folhagem = 3.5;
 
   // tronco
   var tronco_geometry = new THREE.CylinderGeometry(0.15, 0.15, altura_tronco, 6, 1);
@@ -314,7 +371,7 @@ function arvoreModelo2(x, z) {
   var material_folhagem = new THREE.MeshLambertMaterial({ color: '#66AD34' });
 
   // tronco
-  var tronco_geometry = new THREE.CylinderGeometry(0.15, 0.15, 8.0, 6, 1);
+  var tronco_geometry = new THREE.CylinderGeometry(0.15, 0.15, 9.0, 6, 1);
   var tronco = new THREE.Mesh(tronco_geometry, material_tronco);
   tronco.castShadow = true;
   tronco.receiveShadow = true;
@@ -354,8 +411,13 @@ function arvoreModelo2(x, z) {
   tronco2.add(folhagem2);
   tronco3.add(folhagem2.clone());
 
-  tronco.position.set(x, 4.0, z);
-  return tronco;
+  tronco.position.set(0, 3.3, 0);
+
+  var arvoreHolder = new THREE.Object3D();
+  arvoreHolder.add(tronco);
+  arvoreHolder.scale.set(2.0, 2.0, 2.0);
+  arvoreHolder.position.set(x, 1.75, z);
+  return arvoreHolder;
 }
 
 function arvoreModelo3(x, z) {
@@ -363,21 +425,21 @@ function arvoreModelo3(x, z) {
   var material_folhagem = new THREE.MeshLambertMaterial({ color: '#66AD34' });
 
   // tronco
-  var tronco_geometry = new THREE.CylinderGeometry(0.10, 0.10, 1.0, 6, 1);
+  var tronco_geometry = new THREE.CylinderGeometry(0.15, 0.15, 4.0, 6, 1);
   var tronco = new THREE.Mesh(tronco_geometry, material_tronco);
   tronco.castShadow = true;
   tronco.receiveShadow = true;
 
   // 'folhagem' 1
-  var folhagem1_geometry = new THREE.ConeGeometry(1.0, 3.0, 8, 1);
+  var folhagem1_geometry = new THREE.ConeGeometry(2.0, 6.0, 8, 1);
   var folhagem1 = new THREE.Mesh(folhagem1_geometry, material_folhagem);
   folhagem1.castShadow = true;
   folhagem1.receiveShadow = true;
 
-  folhagem1.position.set(0.0, 2.0, 0.0);
+  folhagem1.position.set(0.0, 4.0, 0.0);
   tronco.add(folhagem1);
 
-  tronco.position.set(x, 0.5, z);
+  tronco.position.set(x, 2.0, z);
   return tronco;
 }
 
@@ -386,7 +448,7 @@ function arvoreModelo4(x, z) {
   var material_folhagem = new THREE.MeshLambertMaterial({ color: '#66AD34', wireframe: false, side: THREE.DoubleSide });
 
   // tronco
-  var tronco_geometry = new THREE.CylinderGeometry(0.10, 0.10, 3.5, 6, 1);
+  var tronco_geometry = new THREE.CylinderGeometry(0.10, 0.10, 4.5, 6, 1);
   var tronco = new THREE.Mesh(tronco_geometry, material_tronco);
   tronco.castShadow = true;
   tronco.receiveShadow = true;
@@ -428,29 +490,101 @@ function arvoreModelo4(x, z) {
   tronco.add(folhagem1);
   tronco.add(folhagem1_circulo);
 
-  tronco.position.set(x, 1.75, z);
-  return tronco;
+  tronco.position.set(0, 1.25 , 0);
+
+  var arvoreHolder = new THREE.Object3D();
+  arvoreHolder.add(tronco);
+  arvoreHolder.scale.set(2.0, 2.0, 2.0);
+  arvoreHolder.position.set(x, 1.75, z);
+  return arvoreHolder;
+}
+
+///////////////// Criação do grid onde as arvores vão aparecer //////////////////
+
+//3 circulos que delimitam a area das montanhas
+function limiteMontanhas(x, z) {
+  var posMontanha1 = new THREE.Vector3(40, 0, 800);
+  var posMontanha2 = new THREE.Vector3(350, 0, -80);
+  var posMontanha3 = new THREE.Vector3(-500, 0, -150);
+  var posAtual = new THREE.Vector3(x, 0, z);
+
+  var limMontanha1 = 280;
+  var limMontanha2 = 150;
+  var limMontanha3 = 150;
+
+  var dentroMontanha1 = posMontanha1.distanceTo(posAtual) < limMontanha1;
+  var dentroMontanha2 = posMontanha2.distanceTo(posAtual) < limMontanha2;
+  var dentroMontanha3 = posMontanha3.distanceTo(posAtual) < limMontanha3;
+
+  return !dentroMontanha1 && !dentroMontanha2 && !dentroMontanha3;
+}
+
+// Retangulo que delimita uma "pista" pro avião delocar, que não contenha arvores
+function limitePistaAviao(x, z){
+  var box = new THREE.Box2( new THREE.Vector2(-30,-30), new THREE.Vector2(30,300) )
+  return !box.containsPoint(new THREE.Vector2(x,z));
+}
+
+// Circulos e retângulos onde não vai ser posicionada nenhuma arvore
+function limitesArbitrarios(x, z){
+  var box = new THREE.Box2( new THREE.Vector2(500,0), new THREE.Vector2(2000,2000) );
+  var box2 = new THREE.Box2( new THREE.Vector2(-2000,-2000), new THREE.Vector2(-680,-300) );
+
+  var pos1 = new THREE.Vector3(-580, 0, 250);
+  var posAtual = new THREE.Vector3(x, 0, z);
+  var dentroLim1 = pos1.distanceTo(posAtual) < 200;
+
+  var pos2 = new THREE.Vector3(-250, 0, 100);
+  var posAtual = new THREE.Vector3(x, 0, z);
+  var dentroLim2 = pos2.distanceTo(posAtual) < 150;
+
+  var pos3 = new THREE.Vector3(450, 0, -600);
+  var posAtual = new THREE.Vector3(x, 0, z);
+  var dentroLim3 = pos3.distanceTo(posAtual) < 200;
+
+  var pos4 = new THREE.Vector3(100, 0, -710);
+  var posAtual = new THREE.Vector3(x, 0, z);
+  var dentroLim4 = pos4.distanceTo(posAtual) < 150;
+
+  return (
+    !box.containsPoint(new THREE.Vector2(x,z)) &&
+    !box2.containsPoint(new THREE.Vector2(x,z)) &&
+    !dentroLim1 &&
+    !dentroLim2 &&
+    !dentroLim3 &&
+    !dentroLim4
+  );
 }
 
 // Cria uma grade onde as arvores vão aparecer
 let pontos = [];
 function obtemGrid() {
   if (pontos.length > 0) {
-      return pontos
+    return pontos
   }
-  let diametro = 200;
-  let espacamento = 5;
-  for (let x = -diametro; x <= diametro; x += espacamento) {
-      for (let z = -diametro; z <= diametro; z += espacamento) {
-          pontos.push({
-              x, z, usado: false
-          });
+  // Limites de geração da grid
+  let left = -900;
+  let right = 950;
+  let top = -940;
+  let bottom = 800;
+  let espacamento = 20;
+
+  for (let x = left; x <= right; x += espacamento) {
+    for (let z = top; z <= bottom; z += espacamento) {
+      // As funções nesse if são o que define a exclusão de pontos da grid, onde as arvores não podem
+      // aparecer, como dentro das montanhas ou em cima do avião
+      if (limiteMontanhas(x, z) && limitePistaAviao(x, z) && limitesArbitrarios(x, z)) {
+        pontos.push({
+          x, z, usado: false
+        });
       }
+    }
   }
 
   return pontos;
 }
 
+///////////////// Criação das arvores /////////////////////
 
 function geraArvore() {
 
@@ -491,50 +625,19 @@ function geraArvore() {
 ///////////// Exporta o ambiente /////////////////
 
 export default function ambiente() {
-  let meshes = [];
+  var arvoresHolder = new THREE.Object3D();
 
   //gera montanhas
-  meshes.push(geraMontanha());
-  //meshes.push(geraMontanha());
-  //meshes.push(geraMontanha());
+  var {m1Obj1, m2Obj1, m3Obj1} = geraMontanha();
+
+  arvoresHolder.add(m1Obj1);
+  arvoresHolder.add(m2Obj1);
+  arvoresHolder.add(m3Obj1);
 
   //gera arvores
-  for (let i = 0; i < 100; i++) {
-      meshes.push(geraArvore());
+  for (let i = 0; i < 200; i++) {
+      arvoresHolder.add(geraArvore());
   }
 
-  //meshes.push(arvoreModelo4(0,0))
-  return meshes;
+  return arvoresHolder;
 }
-
-
-
-/*
-0: Vector3 {x: 0, y: 10, z: 0}
-1: Vector3 {x: 0, y: 6, z: 1}
-2: Vector3 {x: 0.9510565400123596, y: 6, z: 0.30901700258255005}
-3: Vector3 {x: 0, y: 2, z: 2}
-4: Vector3 {x: 1.9021130800247192, y: 2, z: 0.6180340051651001}
-5: Vector3 {x: 0, y: -2, z: 3}
-6: Vector3 {x: 2.8531694412231445, y: -2, z: 0.9270510077476501}
-7: Vector3 {x: 0, y: -6, z: 4}
-8: Vector3 {x: 3.8042261600494385, y: -6, z: 1.2360680103302002}
-9: Vector3 {x: 0, y: -10, z: 5}
-10: Vector3 {x: 4.755282402038574, y: -10, z: 1.5450849533081055}
-11: Vector3 {x: 0.5877852439880371, y: 6, z: -0.80901700258255}
-12: Vector3 {x: 1.1755704879760742, y: 2, z: -1.6180340051651}
-13: Vector3 {x: 1.7633557319641113, y: -2, z: -2.427051067352295}
-14: Vector3 {x: 2.3511409759521484, y: -6, z: -3.2360680103302}
-15: Vector3 {x: 2.9389262199401855, y: -10, z: -4.0450849533081055}
-16: Vector3 {x: -0.5877852439880371, y: 6, z: -0.80901700258255}
-17: Vector3 {x: -1.1755704879760742, y: 2, z: -1.6180340051651}
-18: Vector3 {x: -1.7633557319641113, y: -2, z: -2.427051067352295}
-19: Vector3 {x: -2.3511409759521484, y: -6, z: -3.2360680103302}
-20: Vector3 {x: -2.9389262199401855, y: -10, z: -4.0450849533081055}
-21: Vector3 {x: -0.9510565400123596, y: 6, z: 0.30901700258255005}
-22: Vector3 {x: -1.9021130800247192, y: 2, z: 0.6180340051651001}
-23: Vector3 {x: -2.8531694412231445, y: -2, z: 0.9270510077476501}
-24: Vector3 {x: -3.8042261600494385, y: -6, z: 1.2360680103302002}
-25: Vector3 {x: -4.755282402038574, y: -10, z: 1.5450849533081055}
-26: Vector3 {x: 0, y: -10, z: 0}
-*/

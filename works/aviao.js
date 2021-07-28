@@ -17,6 +17,7 @@ export default function aviao() {
     var geometria_cilindro1 = new THREE.CylinderGeometry(diametro_cilindro1 / 2.0, diametro_cilindro1 / 2.0, altura_cilindro1, 18);
     var cilindro1 = new THREE.Mesh(geometria_cilindro1, material_aviao_red);
     cilindro1.castShadow = true;
+    cilindro1.receiveShadow = true;
     cilindro1.position.set(0.0, 0.0, 0.0);
     cilindro1.rotation.set(degreesToRadians(85), 0, 0);
 
@@ -26,17 +27,20 @@ export default function aviao() {
     const geometria_braco1 = new THREE.BoxGeometry(0.2,0.7,0.8,18,18);
     const braco1 = new THREE.Mesh( geometria_braco1, material_aviao_red);
     braco1.castShadow = true;
+    braco1.receiveShadow = true;
     braco1.position.set(ponto_rodinha, 0.5, horizontal_rodinha);
     braco1.rotation.set(degreesToRadians(-90),0,0.0);
     cilindro1.add( braco1);
     var braco2 = braco1.clone()
     braco2.position.set(-ponto_rodinha,0.5,horizontal_rodinha);
     braco2.castShadow = true;
+    braco2.receiveShadow = true;
     cilindro1.add(braco2);
     //cilindro que liga as rodinhas
     var cilindro_amarelo = new THREE.CylinderGeometry(0.05,0.05,1.7,18,18);
     var cilindro_rodinhas = new THREE.Mesh(cilindro_amarelo,material_aviao_yellow);
     cilindro_rodinhas.castShadow = true;
+    cilindro_rodinhas.receiveShadow = true;
     cilindro_rodinhas.rotation.set(0,0,degreesToRadians(90));
     cilindro_rodinhas.position.set(-0.3,-0.15,0);
     braco1.add(cilindro_rodinhas);
@@ -47,11 +51,13 @@ export default function aviao() {
     const geometria_torus = new THREE.TorusGeometry(0.20, 0.20, 30, 80);
     const torus1 = new THREE.Mesh( geometria_torus, material_aviao_borracha);
     torus1.castShadow = true;
+    torus1.receiveShadow = true;
     torus1.rotation.set(degreesToRadians(90),0,0);
     torus1.position.set(0,-0.7,0);
     cilindro_rodinhas.add( torus1 );
     var torus2 = torus1.clone();
     torus2.castShadow = true;
+    torus2.receiveShadow = true;
     torus2.rotation.set(degreesToRadians(90),0,0);
     torus2.position.set(0,0.7,0);
     cilindro_rodinhas.add( torus2 );
@@ -65,6 +71,7 @@ export default function aviao() {
     var geometria_esfera_bico = new THREE.SphereGeometry(raio_esfera_bico, 18, 18);
     var esfera_bico = new THREE.Mesh(geometria_esfera_bico, material_aviao_yellow);
     esfera_bico.castShadow = true;
+    esfera_bico.receiveShadow = true;
     esfera_bico.position.set(0.0, altura_cilindro1 / 2.0, 0.0);
     cilindro1.add(esfera_bico)
 
@@ -77,6 +84,7 @@ export default function aviao() {
     geometria_cabine.scale(0.6, 1.8, 1);
     var cabine = new THREE.Mesh(geometria_cabine, material_aviao_grey);
     cabine.castShadow = true;
+    cabine.receiveShadow = true;
     cabine.position.set(0.0, 0.0, -diametro_cilindro1 / 3.0);
     cilindro1.add(cabine);
 
@@ -86,6 +94,7 @@ export default function aviao() {
     var geometria_eixo_helice = new THREE.CylinderGeometry(diametro_eixo_helice / 2.0, diametro_eixo_helice / 2.0, altura_eixo_helice, 18);
     var eixo_helice = new THREE.Mesh(geometria_eixo_helice, material_aviao_yellow);
     eixo_helice.castShadow = true;
+    eixo_helice.receiveShadow = true;
     esfera_bico.add(eixo_helice);
     eixo_helice.position.set(0.0, raio_esfera_bico + altura_eixo_helice / 2.0, 0.0);
 
@@ -104,6 +113,7 @@ export default function aviao() {
     helice1_geometry.rotateX(degreesToRadians(angulo_ataque))
     var helice1 = new THREE.Mesh(helice1_geometry, material_aviao_black);
     helice1.castShadow = true;
+    helice1.receiveShadow = true;
     helice1.position.set(0.0, altura_eixo_helice / 2.0 - profundidade_helice / 2.0, 0.0);
     helice1.rotation.set(Math.PI / 2, 0, 0);
     eixo_helice.add(helice1);
@@ -113,6 +123,7 @@ export default function aviao() {
     helice2_geometry.rotateX(degreesToRadians(angulo_ataque))
     var helice2 = new THREE.Mesh(helice2_geometry, material_aviao_black);
     helice2.castShadow = true;
+    helice2.receiveShadow = true;
     helice2.position.set(0.0, altura_eixo_helice / 2.0 - profundidade_helice / 2.0, 0.0);
     helice2.rotation.set(Math.PI / 2, 0, degreesToRadians(120));
     eixo_helice.add(helice2);
@@ -122,6 +133,7 @@ export default function aviao() {
     helice3_geometry.rotateX(degreesToRadians(angulo_ataque))
     var helice3 = new THREE.Mesh(helice3_geometry, material_aviao_black);
     helice3.castShadow = true;
+    helice3.receiveShadow = true;
     helice3.position.set(0.0, altura_eixo_helice / 2.0 - profundidade_helice / 2.0, 0.0);
     helice3.rotation.set(Math.PI / 2, 0, degreesToRadians(240));
     eixo_helice.add(helice3);
@@ -133,6 +145,7 @@ export default function aviao() {
     var geometria_cilindro3 = new THREE.CylinderGeometry(diametro_cilindro1 / 2.0, diametro_cilindro3 / 2.0, altura_cilindro3, 18);
     var cilindro3 = new THREE.Mesh(geometria_cilindro3, material_aviao_red);
     cilindro3.castShadow = true;
+    cilindro3.receiveShadow = true;
     cilindro3.position.set(0.0, 0.06 - (altura_cilindro1 / 2.0) - (altura_cilindro3 / 2.0), -0.15);
     cilindro3.rotation.set(degreesToRadians(5), 0.0, 0.0)
     cilindro1.add(cilindro3);
@@ -141,6 +154,7 @@ export default function aviao() {
     var apoio1_geometria = new THREE.BoxGeometry(0.03,0.7,0.18,18,18);
     var apoio1 = new THREE.Mesh(apoio1_geometria,material_aviao_red);
     apoio1.castShadow = true;
+    apoio1.receiveShadow = true;
     apoio1.position.set(diametro_cilindro3/8.0,-1.0,diametro_cilindro3);
     apoio1.rotation.set(degreesToRadians(-55),0,0)
     cilindro3.add(apoio1);
@@ -153,6 +167,7 @@ export default function aviao() {
     var cilindro2_amarelo = new THREE.CylinderGeometry(0.03,0.03,(diametro_cilindro3-0.1)/2.0,18,18);
     var cilindro2_rodinhas = new THREE.Mesh(cilindro2_amarelo,material_aviao_yellow);
     cilindro2_rodinhas.castShadow = true;
+    cilindro2_rodinhas.receiveShadow = true;
     cilindro2_rodinhas.rotation.set(0,0,degreesToRadians(90));
     cilindro2_rodinhas.position.set(-diametro_cilindro3/8.0,-0.2,0.05);//set(-0.3,-0.15,0);
     apoio1.add(cilindro2_rodinhas);
@@ -161,6 +176,7 @@ export default function aviao() {
     const geometria_torus1 = new THREE.TorusGeometry(0.10, 0.15, 30, 80);
     const torus3 = new THREE.Mesh( geometria_torus1, material_aviao_borracha);
     torus3.castShadow = true;
+    torus3.receiveShadow = true;
     torus3.rotation.set(degreesToRadians(90),0,0);
     torus3.position.set(0,0,0);
     cilindro2_rodinhas.add( torus3 );
@@ -171,6 +187,7 @@ export default function aviao() {
     var geometria_asas_maiores = new THREE.BoxGeometry(largura_asas_maiores, altura_asas_maiores, profundidade_asas_maiores);
     var asas_maiores = new THREE.Mesh(geometria_asas_maiores, material_aviao_red);
     asas_maiores.castShadow = true;
+    asas_maiores.receiveShadow = true;
     asas_maiores.position.set(0.0, 0.0, 0.0);
     asas_maiores.rotation.set(Math.PI / 2, 0, 0);
     cilindro1.add(asas_maiores);
@@ -201,6 +218,7 @@ export default function aviao() {
     //ponta esquerda
     var pontaAsas_aviao_esquerda = new THREE.Mesh(shapePara, material_aviao_yellow);
     pontaAsas_aviao_esquerda.castShadow = true;
+    pontaAsas_aviao_esquerda.receiveShadow = true;
     pontaAsas_aviao_esquerda.rotation.set(0.0,0.0,degreesToRadians(190));
     pontaAsas_aviao_esquerda.position.set(-largura_asas_maiores/2.0 ,altura_asas_maiores/2.0,-profundidade_asas_maiores/2.0);
     asas_maiores.add(pontaAsas_aviao_esquerda);
@@ -233,6 +251,7 @@ export default function aviao() {
     var geometry_asas_menores = new THREE.ExtrudeGeometry(curvaAsa_menor, extrudeSettings);
     var asas_menores = new THREE.Mesh(geometry_asas_menores, material_aviao_yellow);
     asas_menores.castShadow = true;
+    asas_menores.receiveShadow = true;
     asas_menores.rotation.set(0,0,degreesToRadians(180+90));
     asas_menores.position.set(0.0, -altura_cilindro3 / 2.0 + profundidade_asas_menores,0.0);
     cilindro3.add(asas_menores);
@@ -242,6 +261,7 @@ export default function aviao() {
     var geometria_esfera_atras = new THREE.SphereGeometry(raio_esfera_atras, 18, 18);
     var esfera_atras = new THREE.Mesh(geometria_esfera_atras, material_aviao_red);
     esfera_atras.castShadow = true;
+    esfera_atras.receiveShadow = true;
     esfera_atras.position.set(0.0, -altura_cilindro3 / 2.0, 0.0);
     cilindro3.add(esfera_atras)
  
@@ -252,6 +272,7 @@ export default function aviao() {
     var geometria_leme1 = new THREE.BoxGeometry(largura_leme1, altura_leme1, profundidade_leme1);
     var leme1 = new THREE.Mesh(geometria_leme1, material_aviao_yellow);
     leme1.castShadow = true;
+    leme1.receiveShadow = true;
     cilindro3.add(leme1);
     leme1.position.set(0.0, -largura_leme1 - profundidade_leme1 / 5.0, -largura_leme1 / 3 - profundidade_leme1 / 3.0);
     leme1.rotation.set(Math.PI / 3, 0, Math.PI / 2);
@@ -263,16 +284,17 @@ export default function aviao() {
     var geometria_leme2 = new THREE.BoxGeometry(largura_leme2, altura_leme2, profundidade_leme2);
     var leme2 = new THREE.Mesh(geometria_leme2, material_aviao_yellow);
     leme2.castShadow = true;
+    leme2.receiveShadow = true;
     leme2.position.set(profundidade_leme1 - 0.508, 0.0, -profundidade_leme1 + 0.4);
     leme2.rotation.set(0.0, degreesToRadians(20), 0.0);
     leme1.add(leme2);
 
     //objeto que armazena o cilindro1(corpo principal do avião)
     var aviaoHolder= new THREE.Object3D();
-    var axesHelper = new THREE.AxesHelper(200);
+    //var axesHelper = new THREE.AxesHelper(200);
 
     aviaoHolder.add(cilindro1);
-    aviaoHolder.add(axesHelper);
+    //aviaoHolder.add(axesHelper);
 
     return { aviaoHolder, eixo_helice};
 
