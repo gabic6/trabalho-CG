@@ -11,7 +11,11 @@ export default function aviao() {
     var objColor_y = 'yellow';
     var material_aviao_yellow = new THREE.MeshPhongMaterial({color:objColor_y, shininess:"200"})
     
+    /////Textura
+    var textureLoader = new THREE.TextureLoader();
+    var texcilindro  = textureLoader.load('../assets/textures/cilindro.png');
     
+
 
 
     //cilindro1 - corpo principal do avião
