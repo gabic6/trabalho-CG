@@ -6,16 +6,17 @@ import {
 } from "../libs/util/util.js";
 
 export default function aviao() {
-    var objColor_r = 'red';
-    var material_aviao_red = new THREE.MeshPhongMaterial({color:objColor_r, shininess:"200"})
-    var objColor_y = 'yellow';
-    var material_aviao_yellow = new THREE.MeshPhongMaterial({color:objColor_y, shininess:"200"})
-    
     /////Textura
     var textureLoader = new THREE.TextureLoader();
-    var texcilindro  = textureLoader.load('../assets/textures/cilindro.png');
-    
+    var corpo  = textureLoader.load('assets/textures/opcao3.jpg');
+    var wings = textureLoader.load('assets/textures/wings.jpg');
 
+    var objColor_r = 'red';
+    var material_aviao_red = new THREE.MeshPhongMaterial({color:objColor_r, shininess:"200",map:corpo});
+    var objColor_y = 'yellow';
+    var material_aviao_yellow = new THREE.MeshPhongMaterial({color:objColor_y, shininess:"200"});
+
+    var material_asas_red = new THREE.MeshPhongMaterial({color:objColor_r, shininess:"200",map:wings});
 
 
     //cilindro1 - corpo principal do avião
@@ -27,6 +28,7 @@ export default function aviao() {
     cilindro1.receiveShadow = true;
     cilindro1.position.set(0.0, 0.0, 0.0);
     cilindro1.rotation.set(degreesToRadians(85), 0, 0);
+    cilindro1.material.map.wrapS=THREE.RepeatWrapping;
 
     //bracinhos das rodinhas do avião
     var ponto_rodinha = diametro_cilindro1/4.0;
@@ -192,11 +194,14 @@ export default function aviao() {
     var largura_asas_maiores = 11.0;
     var profundidade_asas_maiores = 1.5;
     var geometria_asas_maiores = new THREE.BoxGeometry(largura_asas_maiores, altura_asas_maiores, profundidade_asas_maiores);
-    var asas_maiores = new THREE.Mesh(geometria_asas_maiores, material_aviao_red);
+    var asas_maiores = new THREE.Mesh(geometria_asas_maiores, material_asas_red);
     asas_maiores.castShadow = true;
     asas_maiores.receiveShadow = true;
     asas_maiores.position.set(0.0, 0.0, 0.0);
     asas_maiores.rotation.set(Math.PI / 2, 0, 0);
+    asas_maiores.material.map.wrapT=THREE.RepeatWrapping;
+    asas_maiores.material.map.wrapS=THREE.RepeatWrapping;
+
     cilindro1.add(asas_maiores);
     
     //Ponta das asas maiores
