@@ -6,14 +6,15 @@ import {
 export function predio1(x, z){
     var material = new THREE.MeshLambertMaterial({ color: '#83BAD6'});
 
-    const largura = 30;
-    const altura = 140;
-    const boxGeometry = new THREE.BoxGeometry( largura, altura, largura );
+    const largura = 30; // x
+    const comprimento = 30; // z
+    const altura = 140; // y
+    const boxGeometry = new THREE.BoxGeometry( largura, altura, comprimento );
     const box = new THREE.Mesh( boxGeometry, material );
     box.castShadow = true;
     box.receiveShadow = true;
     // Conversão de coordenadas do draw.io pro threejs
-    box.position.set(x + largura/2.0, largura/2.0, z + altura/2.0);
+    box.position.set(x + largura/2.0, altura / 2.0, z + comprimento/2.0);
 
     //caixinha de cima
     var material2 = new THREE.MeshLambertMaterial({ color: 'red'});
@@ -34,12 +35,13 @@ export function predio2(x, z){
 
     const largura = 40;
     const altura = 110;
-    const boxGeometry = new THREE.BoxGeometry( largura, altura, largura );
+    const comprimento = largura;
+    const boxGeometry = new THREE.BoxGeometry( largura, altura, comprimento );
     const box = new THREE.Mesh( boxGeometry, material );
     box.castShadow = true;
     box.receiveShadow = true;
     // Conversão de coordenadas do draw.io pro threejs
-    box.position.set(x + largura/2.0, largura/2.0, z + altura/2.0);
+    box.position.set(x + largura/2.0, altura / 2.0, z + comprimento/2.0);
 
     //caixinha de cima
     var material2 = new THREE.MeshLambertMaterial({ color: 'red'});
@@ -87,19 +89,53 @@ export function predio2(x, z){
 export function predio3(x, z){
     var material = new THREE.MeshLambertMaterial({ color: '#83BAD6'});
 
-    const depth = 100 * Math.random() + 10;
-    const width = 30;
-    const height = 30;
-    const boxGeometry = new THREE.BoxGeometry( width, depth, height );
-    const box = new THREE.Mesh( boxGeometry, material );
-    box.castShadow = true;
-    box.receiveShadow = true;
+    const depth1 = 60;//altura
+    const width1 = 50;//largura
+    const height1 = 90;//comprimento
+    const boxGeometry1 = new THREE.BoxGeometry( width1, height1, depth1 );
+    const box1 = new THREE.Mesh( boxGeometry1, material );
+    box1.castShadow = true;
+    box1.receiveShadow = true;
+
+    const depth2 = 50;
+    const width2 = 40;
+    const height2 = 20;
+    const boxGeometry2 = new THREE.BoxGeometry( width2, height2, depth2 );
+    const box2 = new THREE.Mesh( boxGeometry2, material );
+    box2.castShadow = true;
+    box2.receiveShadow = true;
+    box1.add(box2);
+    box2.translateY(height1/2 + height2/2);
+
+    const depth3 = 35;
+    const width3 = 25;
+    const height3 = 20;
+    const boxGeometry3 = new THREE.BoxGeometry( width3, height3, depth3 );
+    const box3 = new THREE.Mesh( boxGeometry3, material );
+    box3.castShadow = true;
+    box3.receiveShadow = true;
+    box2.add(box3);
+    box3.translateY(height2/2 + height3/2);
+
+    const depth4 = 15;
+    const width4 = 20;
+    const height4 = 15;
+    const boxGeometry4 = new THREE.BoxGeometry( width4, height4, depth4 );
+    const box4 = new THREE.Mesh( boxGeometry4, material );
+    box4.castShadow = true;
+    box4.receiveShadow = true;
+    box3.add(box4);
+    box4.translateY(height3/2 + height4/2);
+
+    box1.translateY(height1/2);
+    box1.translateX(x);
+    box1.translateZ(z);
 
     // Conversão de coordenadas do draw.io pro threejs
     //box.rotateX(degreesToRadians(-90));
-    box.position.set(x + width/2.0, depth/2.0, z + height/2.0);
+    //box.position.set(x + width/2.0, depth/2.0, z + height/2.0);
 
-    return box; 
+    return box1; 
 }
 
 export function predio4(x, z){
@@ -141,17 +177,33 @@ export function predio5(x, z){
 export function predio6(x, z){
     var material = new THREE.MeshLambertMaterial({ color: '#83BAD6'});
 
-    const depth = 100 * Math.random() + 10;
-    const width = 30;
-    const height = 30;
-    const boxGeometry = new THREE.BoxGeometry( width, depth, height );
-    const box = new THREE.Mesh( boxGeometry, material );
-    box.castShadow = true;
-    box.receiveShadow = true;
+    const depth1 = 80;
+    const width1 = 60;
+    const height1 = 30;
+    const boxGeometry1 = new THREE.BoxGeometry( width1, height1, depth1 );
+    const box1 = new THREE.Mesh( boxGeometry1, material );
+    box1.castShadow = true;
+    box1.receiveShadow = true;
+
+    const depth2 = 80;
+    const width2 = 30;
+    const height2 = 20;
+    const boxGeometry2 = new THREE.BoxGeometry( width2, height2, depth2 );
+    const box2 = new THREE.Mesh( boxGeometry2, material );
+    box2.castShadow = true;
+    box2.receiveShadow = true;
+
+    box2.position.set(width1/2 + width2/2, -(height1/2 - height2/2), 0);
+
+    box1.add(box2);
+
+    box1.translateY(height1/2);
+    box1.translateX(x);
+    box1.translateZ(z);
 
     // Conversão de coordenadas do draw.io pro threejs
     //box.rotateX(degreesToRadians(-90));
-    box.position.set(x + width/2.0, depth/2.0, z + height/2.0);
+    //box.position.set(x + width/2.0, depth/2.0, z + height/2.0);
 
-    return box; 
+    return box1; 
 }

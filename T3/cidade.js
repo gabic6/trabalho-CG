@@ -176,6 +176,7 @@ scene.add(plane);
 ////////////// Aqui entra o código da cidade /////////////////////
 
 var material_asfalto = new THREE.MeshLambertMaterial({ color: '#333333' });
+var material_asfalto_v = new THREE.MeshLambertMaterial({ color: '#333333' });
 var material_meio_fio = new THREE.MeshLambertMaterial({ color: '#cccccc' });
 var material_grama = new THREE.MeshLambertMaterial({ color: '#22FF00' });
 var material_fronteira_cidade = new THREE.MeshLambertMaterial({ color: '#33FF33' });
@@ -232,21 +233,36 @@ function criaMeioFio(x, z, width, height, material) {
 //     {x: 102.5, z: 175},
 //     {x: 195, z: 176.7},
 //     {x: 107.5, z: 90},
-//     {x: 40, z: 280},
+//     // {x: 40, z: 280},
 //     {x: -80, z: 280},
 //     {x: -205, z: 280},
 //     {x: -60, z: 175},
 //     {x: -140, z: 175},
 //     {x: -230, z: 130},
-//     {x: 195, z: 109}
+//     {x: 195, z: 109},
+//     {x:55,   z:-235}
 // ]
 
 function criarCidade(dicionarioMateriais) {
+    // Clona a textura do asfalto pra nao precisar carregar ela duas vezes
+    // e também pra não atrapalhar as outras ruas horizontais
+    var asfaltoClonado = dicionarioMateriais['asfalto.jpg'].clone()
+    asfaltoClonado.needsUpdate = true;
+
     // Cria os materiais
     material_asfalto = new THREE.MeshLambertMaterial({ 
         color: '#ffffff', 
-        map: dicionarioMateriais['asfalto.jpg'] 
+        map: dicionarioMateriais['asfalto.jpg']
     });
+    material_asfalto_v = new THREE.MeshLambertMaterial({ 
+        color: '#ffffff', 
+        map: asfaltoClonado
+    });
+    material_asfalto_v.map.rotation = degreesToRadians(90);
+    material_asfalto_v.map.repeat.set(10,1);
+    material_asfalto_v.map.wrapS = THREE.RepeatWrapping;
+    material_asfalto_v.map.wrapT = THREE.RepeatWrapping;
+
     material_meio_fio = new THREE.MeshLambertMaterial({ 
         color: '#ffffff',
         map: dicionarioMateriais['concreto.jpg'] 
@@ -259,17 +275,17 @@ function criarCidade(dicionarioMateriais) {
     //  });
 
     //Ruas
-    cidadeHolder.add(criaPlano(0, -280, 20, 640, material_asfalto));
+    cidadeHolder.add(criaPlano(0, -280, 20, 640, material_asfalto_v));
     cidadeHolder.add(criaPlano(20, -60, 65, 10, material_asfalto));
-    cidadeHolder.add(criaPlano(85, -160, 10, 300, material_asfalto));
+    cidadeHolder.add(criaPlano(85, -160, 10, 300, material_asfalto_v));
     cidadeHolder.add(criaPlano(20, 0, 65, 10, material_asfalto));
     cidadeHolder.add(criaPlano(20, -280, 180, 10, material_asfalto));
-    cidadeHolder.add(criaPlano(200, -280, 10, 220, material_asfalto));
+    cidadeHolder.add(criaPlano(200, -280, 10, 220, material_asfalto_v));
     cidadeHolder.add(criaPlano(20, -170, 180, 10, material_asfalto));
     cidadeHolder.add(criaPlano(20, -170, 180, 10, material_asfalto));
     cidadeHolder.add(criaPlano(95, -60, 175, 10, material_asfalto));
-    cidadeHolder.add(criaPlano(260, -50, 10, 290, material_asfalto));
-    cidadeHolder.add(criaPlano(150, -50, 10, 290, material_asfalto));
+    cidadeHolder.add(criaPlano(260, -50, 10, 290, material_asfalto_v));
+    cidadeHolder.add(criaPlano(150, -50, 10, 290, material_asfalto_v));
     cidadeHolder.add(criaPlano(95, 0, 55, 10, material_asfalto));
     cidadeHolder.add(criaPlano(160, 70, 100, 10, material_asfalto));
     cidadeHolder.add(criaPlano(85, 140, 65, 10, material_asfalto));
@@ -278,18 +294,18 @@ function criarCidade(dicionarioMateriais) {
     cidadeHolder.add(criaPlano(160, 230, 100, 10, material_asfalto));
     cidadeHolder.add(criaPlano(-250, -280, 250, 10, material_asfalto));
     cidadeHolder.add(criaPlano(-250, -170, 250, 10, material_asfalto));
-    cidadeHolder.add(criaPlano(-260, -280, 10, 640, material_asfalto));
-    cidadeHolder.add(criaPlano(-100, -160, 10, 100, material_asfalto));
+    cidadeHolder.add(criaPlano(-260, -280, 10, 640, material_asfalto_v));
+    cidadeHolder.add(criaPlano(-100, -160, 10, 100, material_asfalto_v));
     cidadeHolder.add(criaPlano(-90, -110, 90, 10, material_asfalto));
     cidadeHolder.add(criaPlano(-170, -60, 170, 10, material_asfalto));
-    cidadeHolder.add(criaPlano(-180, -60, 10, 290, material_asfalto));
-    cidadeHolder.add(criaPlano(-100, -50, 10, 110, material_asfalto));
+    cidadeHolder.add(criaPlano(-180, -60, 10, 290, material_asfalto_v));
+    cidadeHolder.add(criaPlano(-100, -50, 10, 110, material_asfalto_v));
     cidadeHolder.add(criaPlano(-170, 50, 70, 10, material_asfalto));
     cidadeHolder.add(criaPlano(-90, 50, 90, 10, material_asfalto));
     cidadeHolder.add(criaPlano(-250, 50, 70, 10, material_asfalto));
     cidadeHolder.add(criaPlano(-170, 140, 170, 10, material_asfalto));
     cidadeHolder.add(criaPlano(-250, 230, 250, 10, material_asfalto));
-    cidadeHolder.add(criaPlano(-130, 240, 10, 110, material_asfalto));
+    cidadeHolder.add(criaPlano(-130, 240, 10, 110, material_asfalto_v));
     cidadeHolder.add(criaPlano(-250, 350, 250, 10, material_asfalto));
 
     // Meios fio
@@ -335,7 +351,25 @@ function criarCidade(dicionarioMateriais) {
     cidadeHolder.add(criaPlano(-700, -575, 30, 600, material_asfalto));
 
     //Predios
-    cidadeHolder.add(predio1(-205, -236));
+    var predios = [
+        predio1,
+        predio2,
+        predio3,
+        predio4,
+        predio5,
+        predio6
+    ]
+    // for(let coord=0;coord<posicoesXZPredios.length;coord++){
+    //     var posPredio = posicoesXZPredios[coord];
+    //     var predioInd = Math.floor((predios.length * Math.random()));
+    //     var funcPredio = predios[predioInd];
+    //     cidadeHolder.add(funcPredio(posPredio.x,posPredio.z));
+    // }
+    cidadeHolder.add(predio6(-80,280));
+    cidadeHolder.add(predio6(-250,240));
+
+
+    // cidadeHolder.add(predio1(-205, -236));
 
     // Posiciona o holder um pouco mais alto que o plano pra não dar conflito
     cidadeHolder.position.set(0, 1.0, 0);
@@ -349,32 +383,51 @@ function criarCidade(dicionarioMateriais) {
 
 const texturas = [
     "asfalto.jpg",
+    "concreto.jpg"/*,
     "aviao_corpo.png",
     "comunismo.jpg",
-    "concreto.jpg",
     "corpo_opcao2.jpg",
     "crown.png",
     "opcao3.jpg",
     "predio_com_janelas.jpg",
-    "wings.jpg"
+    "wings.jpg"*/
 ]
 
 const manager = new THREE.LoadingManager();
 manager.onStart = function (url, itemsLoaded, itemsTotal) {
-    console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+    //console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+    setProgresso(0);
 };
 
 manager.onLoad = function () {
-    console.log('Loading complete!');
+    //console.log('Loading complete!');
+    escondeTelaLoading();
     scene.add(criarCidade(texturasCarregadas));
 };
 
 manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-    console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+    //console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+    setProgresso(itemsLoaded / texturas.length);
 };
 
+function setProgresso(progresso){
+    if(progresso > 1){
+        progresso = 1;
+    }
+    if(progresso < 0){
+        progresso = 0;
+    }
+    let barraLoading = document.getElementById("barraLoading");
+    //console.log('barraLoading',barraLoading, `${200*progresso}px`)
+    barraLoading.style.width = `${200*progresso}px`;
+}
+function escondeTelaLoading(){
+    let telaLoading = document.getElementById("telaLoading");
+    telaLoading.style.display = 'none';
+}
+
 manager.onError = function (url) {
-    console.log('There was an error loading ' + url);
+    console.error('There was an error loading ' + url);
 };
 const loader = new THREE.TextureLoader(manager);
 var texturasCarregadas = {};

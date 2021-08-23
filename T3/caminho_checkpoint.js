@@ -34,6 +34,7 @@ var timer = new THREE.Clock();
 var listaCheckpoints = [];
 var cont = -1;
 var infoTempoCont = new SecondaryBox("Checkpoints atravessados: 0 / Tempo decorrido: 0.000 s");
+//var infoTempoCont = new SecondaryBox("Checkpoints: 0 / " + listaCheckpoints.length-1 + " / Tempo decorrido: 0.000 s");
 var tempoFinal = 0.0;
 var listaTimestamps = [];
 var timerIniciado = false;
