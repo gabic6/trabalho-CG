@@ -177,7 +177,7 @@ scene.add(plane);
 
 var material_asfalto = new THREE.MeshLambertMaterial({ color: '#333333' });
 var material_asfalto_v = new THREE.MeshLambertMaterial({ color: '#333333' });
-var material_meio_fio = new THREE.MeshLambertMaterial({ color: '#cccccc' });
+var material_concreto = new THREE.MeshLambertMaterial({ color: '#cccccc' });
 var material_grama = new THREE.MeshLambertMaterial({ color: '#22FF00' });
 var material_fronteira_cidade = new THREE.MeshLambertMaterial({ color: '#33FF33' });
 
@@ -254,6 +254,7 @@ function criarCidade(dicionarioMateriais) {
         color: '#ffffff', 
         map: dicionarioMateriais['asfalto.jpg']
     });
+
     material_asfalto_v = new THREE.MeshLambertMaterial({ 
         color: '#ffffff', 
         map: asfaltoClonado
@@ -263,10 +264,14 @@ function criarCidade(dicionarioMateriais) {
     material_asfalto_v.map.wrapS = THREE.RepeatWrapping;
     material_asfalto_v.map.wrapT = THREE.RepeatWrapping;
 
-    material_meio_fio = new THREE.MeshLambertMaterial({ 
+    material_concreto = new THREE.MeshLambertMaterial({ 
         color: '#ffffff',
         map: dicionarioMateriais['concreto.jpg'] 
     });
+    material_concreto.map.repeat.set(10,10);
+    material_concreto.map.wrapS = THREE.RepeatWrapping;
+    material_concreto.map.wrapT = THREE.RepeatWrapping;
+
     // material_grama = new THREE.MeshLambertMaterial({ 
     //     color: '#ffffff',
     //  });
@@ -309,29 +314,29 @@ function criarCidade(dicionarioMateriais) {
     cidadeHolder.add(criaPlano(-250, 350, 250, 10, material_asfalto));
 
     // Meios fio
-    cidadeHolder.add(criaMeioFio(20, -50, 65, 50, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(20, -160, 65, 100, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(95, -160, 105, 100, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(20, -270, 180, 100, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(95, -50, 55, 50, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(160, -50, 100, 120, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(20, 10, 65, 40, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(95, 10, 55, 130, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(160, 80, 100, 150, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(20, 60, 65, 170, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(85, 150, 65, 80, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-250, -270, 250, 100, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-90, -160, 90, 50, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-90, -100, 90, 40, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-180, -160, 80, 100, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-250, -160, 70, 210, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-170, -50, 70, 100, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-90, -50, 90, 100, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-250, 60, 70, 170, material_meio_fio));
+    cidadeHolder.add(criaMeioFio(20, -50, 65, 50, material_concreto));
+    cidadeHolder.add(criaMeioFio(20, -160, 65, 100, material_concreto));
+    cidadeHolder.add(criaMeioFio(95, -160, 105, 100, material_concreto));
+    cidadeHolder.add(criaMeioFio(20, -270, 180, 100, material_concreto));
+    cidadeHolder.add(criaMeioFio(95, -50, 55, 50, material_concreto));
+    cidadeHolder.add(criaMeioFio(160, -50, 100, 120, material_concreto));
+    cidadeHolder.add(criaMeioFio(20, 10, 65, 40, material_concreto));
+    cidadeHolder.add(criaMeioFio(95, 10, 55, 130, material_concreto));
+    cidadeHolder.add(criaMeioFio(160, 80, 100, 150, material_concreto));
+    cidadeHolder.add(criaMeioFio(20, 60, 65, 170, material_concreto));
+    cidadeHolder.add(criaMeioFio(85, 150, 65, 80, material_concreto));
+    cidadeHolder.add(criaMeioFio(-250, -270, 250, 100, material_concreto));
+    cidadeHolder.add(criaMeioFio(-90, -160, 90, 50, material_concreto));
+    cidadeHolder.add(criaMeioFio(-90, -100, 90, 40, material_concreto));
+    cidadeHolder.add(criaMeioFio(-180, -160, 80, 100, material_concreto));
+    cidadeHolder.add(criaMeioFio(-250, -160, 70, 210, material_concreto));
+    cidadeHolder.add(criaMeioFio(-170, -50, 70, 100, material_concreto));
+    cidadeHolder.add(criaMeioFio(-90, -50, 90, 100, material_concreto));
+    cidadeHolder.add(criaMeioFio(-250, 60, 70, 170, material_concreto));
     cidadeHolder.add(criaMeioFio(-170, 60, 170, 80, material_grama));
-    cidadeHolder.add(criaMeioFio(-170, 150, 170, 80, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-250, 240, 120, 110, material_meio_fio));
-    cidadeHolder.add(criaMeioFio(-120, 240, 120, 110, material_meio_fio));
+    cidadeHolder.add(criaMeioFio(-170, 150, 170, 80, material_concreto));
+    cidadeHolder.add(criaMeioFio(-250, 240, 120, 110, material_concreto));
+    cidadeHolder.add(criaMeioFio(-120, 240, 120, 110, material_concreto));
 
     //Fronteiras da cidade
     cidadeHolder.add(criaPlano(270, -310, 90, 700, material_fronteira_cidade));
@@ -343,12 +348,12 @@ function criarCidade(dicionarioMateriais) {
     cidadeHolder.add(criaPlano(20, 240, 250, 150, material_fronteira_cidade));
 
     //Rua até o aeroporto
-    cidadeHolder.add(criaPlano(5, -475, 10, 196, material_asfalto));
+    cidadeHolder.add(criaPlano(5, -475, 10, 196, material_asfalto_v));
     cidadeHolder.add(criaPlano(-560, -485, 575, 10, material_asfalto));
 
     //Aeroporto
-    cidadeHolder.add(criaPlano(-670, -530, 110, 100, material_meio_fio));
-    cidadeHolder.add(criaPlano(-700, -575, 30, 600, material_asfalto));
+    cidadeHolder.add(criaPlano(-670, -530, 110, 100, material_concreto));
+    cidadeHolder.add(criaPlano(-700, -575, 30, 600, material_asfalto_v));
 
     //Predios
     var predios = [
@@ -367,6 +372,8 @@ function criarCidade(dicionarioMateriais) {
     // }
     cidadeHolder.add(predio6(-80,280));
     cidadeHolder.add(predio6(-250,240));
+    cidadeHolder.add(predio4(202,-10));
+    cidadeHolder.add(predio5(182,100));
 
 
     // cidadeHolder.add(predio1(-205, -236));
