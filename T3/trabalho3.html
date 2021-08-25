@@ -5,11 +5,56 @@
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../html/resources/default.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <style>
+      body {
+        position: relative;
+      }
+      .telaLoading {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9000;
+        background-color: black;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+      }
+      .loading {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .txtLoading {
+        color: #FFF;
+      }
+      .fundoLoading {
+        background-color: red;
+        width: 200px;
+        height: 20px;
+      }
+      .barraLoading {
+        background-color: yellow;
+        height: 20px;
+        width: 0
+      }
+    </style>
 </head>
 
 <body>
   <div id="webgl-output">
     <script type="module" src="trabalho3.js"></script>
+    <script type="module" src="caminho_checkpoint.js"></script> 
+  </div>
+  <div id="telaLoading" class="telaLoading">
+    <div class="loading">
+      <span id="txtLoading" class="txtLoading">Carregando...</span>
+      <div class="fundoLoading">
+        <div id="barraLoading" class="barraLoading"/>
+      </div>
+    </div>
   </div>
 </body>
 

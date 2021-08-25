@@ -2,10 +2,12 @@ import * as THREE from '../../build/three.module.js';
 import Stats from '../../build/jsm/libs/stats.module.js';
 import { TrackballControls } from '../../build/jsm/controls/TrackballControls.js';
 import { OBJLoader } from '../../build/jsm/loaders/OBJLoader.js';
+import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js';
 import {
     initRenderer,
     initCamera,
     degreesToRadians,
+    getMaxSize,
     onWindowResize,
     initDefaultBasicLight,
     createGroundPlaneWired,
@@ -266,11 +268,19 @@ function criarCidade(dicionarioMateriais) {
 
     material_concreto = new THREE.MeshLambertMaterial({ 
         color: '#ffffff',
-        map: dicionarioMateriais['concreto.jpg'] 
+        map: dicionarioMateriais['conc02.jpg'] 
     });
     material_concreto.map.repeat.set(10,10);
     material_concreto.map.wrapS = THREE.RepeatWrapping;
     material_concreto.map.wrapT = THREE.RepeatWrapping;
+
+    material_grama = new THREE.MeshLambertMaterial({ 
+        color: '#ffffff',
+        map: dicionarioMateriais['grama.jpg'] 
+    });
+    material_grama.map.repeat.set(17,8);
+    material_grama.map.wrapS = THREE.RepeatWrapping;
+    material_grama.map.wrapT = THREE.RepeatWrapping;
 
     // material_grama = new THREE.MeshLambertMaterial({ 
     //     color: '#ffffff',
@@ -333,7 +343,13 @@ function criarCidade(dicionarioMateriais) {
     cidadeHolder.add(criaMeioFio(-170, -50, 70, 100, material_concreto));
     cidadeHolder.add(criaMeioFio(-90, -50, 90, 100, material_concreto));
     cidadeHolder.add(criaMeioFio(-250, 60, 70, 170, material_concreto));
-    cidadeHolder.add(criaMeioFio(-170, 60, 170, 80, material_grama));
+    // Pracinha
+    cidadeHolder.add(criaMeioFio(-168, 62, 166, 76, material_grama));
+    cidadeHolder.add(criaMeioFio(-2, 60, 2, 80, material_concreto));
+    cidadeHolder.add(criaMeioFio(-168, 138, 166, 2, material_concreto));
+    cidadeHolder.add(criaMeioFio(-170, 60, 2, 80, material_concreto));
+    cidadeHolder.add(criaMeioFio(-168, 60, 166, 2, material_concreto));
+    //
     cidadeHolder.add(criaMeioFio(-170, 150, 170, 80, material_concreto));
     cidadeHolder.add(criaMeioFio(-250, 240, 120, 110, material_concreto));
     cidadeHolder.add(criaMeioFio(-120, 240, 120, 110, material_concreto));
@@ -370,12 +386,29 @@ function criarCidade(dicionarioMateriais) {
     //     var funcPredio = predios[predioInd];
     //     cidadeHolder.add(funcPredio(posPredio.x,posPredio.z));
     // }
-    cidadeHolder.add(predio6(-80,280));
-    cidadeHolder.add(predio6(-250,240));
-    cidadeHolder.add(predio4(202,-10));
-    cidadeHolder.add(predio5(182,100));
+    //predio1 - 30 comprimento e 30 largura
+    //predio2 - 40 comprimento e 40 largura
+    //predio3 - 60 comprimento e 50 largura
+    //predio4 - 40 comprimento e 15 largura
+    //predio5 - 60 comprimento e 60 largura
+    //predio6 - 110 comprimento e 60 largura
+    
+    cidadeHolder.add(predio6(-80,290));
+    cidadeHolder.add(predio6(-202,290));
 
+    cidadeHolder.add(predio6(148,-123).rotateY(degreesToRadians(-90)));
 
+    // console.log(typeof(predio4(0,0)));
+    cidadeHolder.add(predio4(202,-10).scale.multiplyScalar(0.1));
+
+    cidadeHolder.add(predio5(182,90));
+    cidadeHolder.add(predio2(182,180));
+
+    cidadeHolder.add(predio4(30,35).rotateY(degreesToRadians(90)));
+
+    cidadeHolder.add(predio1(107.5,-40));
+
+    cidadeHolder.add(predio3(52,-110));
     // cidadeHolder.add(predio1(-205, -236));
 
     // Posiciona o holder um pouco mais alto que o plano pra não dar conflito
@@ -390,7 +423,8 @@ function criarCidade(dicionarioMateriais) {
 
 const texturas = [
     "asfalto.jpg",
-    "concreto.jpg"/*,
+    "conc02.jpg",
+    "grama.jpg"/*,
     "aviao_corpo.png",
     "comunismo.jpg",
     "corpo_opcao2.jpg",
@@ -414,7 +448,7 @@ manager.onLoad = function () {
 
 manager.onProgress = function (url, itemsLoaded, itemsTotal) {
     //console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
-    setProgresso(itemsLoaded / texturas.length);
+    setProgresso(itemsLoaded / (texturas.length + 1));
 };
 
 function setProgresso(progresso){
@@ -444,6 +478,83 @@ for (let i = 0; i < texturas.length; i++) {
         //Faz um dicionario com as texturas carregadas
         texturasCarregadas[texturas[i]] = object;
     });
+}
+
+loadOBJFile('./assets/objects/', 'Decoration 14', 30.0, 0, true);
+
+var testeObjeto = null;
+
+function loadOBJFile(modelPath, modelName, desiredScale, angle, visibility)
+{
+    var currentModel = modelName;
+    //var manager = new THREE.LoadingManager( );
+
+  var mtlLoader = new MTLLoader( manager );
+  mtlLoader.setPath( modelPath );
+  mtlLoader.load( modelName + '.mtl', function ( materials ) {
+      materials.preload();
+
+      var objLoader = new OBJLoader( manager );
+      objLoader.setMaterials(materials);
+      objLoader.setPath(modelPath);
+      objLoader.load( modelName + ".obj", function ( obj ) {
+        obj.visible = visibility;
+        obj.name = modelName;
+        // Set 'castShadow' property for each children of the group
+        obj.traverse( function (child)
+        {
+          child.castShadow = true;
+        });
+
+        obj.traverse( function( node )
+        {
+          if( node.material ) node.material.side = THREE.DoubleSide;
+        });
+
+
+        var obj = normalizeAndRescale(obj, desiredScale);
+        var obj = fixPosition(obj);
+        obj.rotateY(degreesToRadians(angle));
+        
+        obj.translateX(-85.0);
+        obj.translateY(1.0);
+        obj.translateZ(100.0);
+        
+        testeObjeto = obj;
+        scene.add ( obj );
+        
+      }, onProgress, onError );
+  });
+}
+
+function onError() { };
+
+function onProgress ( xhr, model ) {
+    if ( xhr.lengthComputable ) {
+      var percentComplete = xhr.loaded / xhr.total * 100;
+      //infoBox.changeMessage("Loading... " + Math.round( percentComplete, 2 ) + '% processed' );
+    }
+}
+
+// Normalize scale and multiple by the newScale
+function normalizeAndRescale(obj, newScale)
+{
+  var scale = getMaxSize(obj); // Available in 'utils.js'
+  obj.scale.set(newScale * (1.0/scale),
+                newScale * (1.0/scale),
+                newScale * (1.0/scale));
+  return obj;
+}
+
+function fixPosition(obj)
+{
+  // Fix position of the object over the ground plane
+  var box = new THREE.Box3().setFromObject( obj );
+  if(box.min.y > 0)
+    obj.translateY(-box.min.y);
+  else
+    obj.translateY(-1*box.min.y);
+  return obj;
 }
 ///////////// Aqui termina o código da cidade ////////////////////
 

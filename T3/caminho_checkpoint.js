@@ -14,6 +14,7 @@ import {
 
 } from "../../libs/util/util.js";
 import KeyboardState from '../../libs/util/KeyboardState.js';
+import tocaSomCheckpoint from './trabalho3.js';
 
 // https://threejs.org/docs/index.html?q=Box3#api/en/math/Box3
 // Implementação da detecção de colisão por bounding box, do ThreeJS
@@ -33,7 +34,7 @@ function detectCollisionCubes(object1, object2) {
 var timer = new THREE.Clock();
 var listaCheckpoints = [];
 var cont = -1;
-var infoTempoCont = new SecondaryBox("Checkpoints atravessados: 0 / Tempo decorrido: 0.000 s");
+var infoTempoCont = new SecondaryBox();
 //var infoTempoCont = new SecondaryBox("Checkpoints: 0 / " + listaCheckpoints.length-1 + " / Tempo decorrido: 0.000 s");
 var tempoFinal = 0.0;
 var listaTimestamps = [];
@@ -74,6 +75,8 @@ export function ocultaInfoBox(ocultar){
 // que levou do usuário cruzar o primeiro checkpoint até cruzar o ultimo
 export function checaColisao(aviao) {
 
+    var num_checkpoints = listaCheckpoints.length - 1;
+    
     for(var i=0; i<listaCheckpoints.length; i++){
         if(listaCheckpoints[i].visible && detectCollisionCubes(aviao, listaCheckpoints[i])){
             // Deu colisão com o checkpoint atual
@@ -81,7 +84,7 @@ export function checaColisao(aviao) {
 
             cont += 1;
             var timeElapsed = timer.getElapsedTime() - calculaTempoEmInspecao();
-            infoTempoCont.changeMessage("Checkpoints atravessados: " + cont + " / Tempo decorrido: " + timeElapsed.toFixed(3) + " s");
+            infoTempoCont.changeMessage("Checkpoints atravessados: " + cont + "/" + num_checkpoints + " / Tempo decorrido: " + timeElapsed.toFixed(3) + " s");
             
             if(cont == 1){
                 timer.start();
@@ -90,18 +93,21 @@ export function checaColisao(aviao) {
 
             if (cont == listaCheckpoints.length - 1) {
                 tempoFinal = timeElapsed;
+                tocaSomCheckpoint(true);
+            } else {
+                tocaSomCheckpoint(false);
             }
             
         }
         
         if(cont >= 1 && cont < listaCheckpoints.length-1) {
             var timeElapsed = timer.getElapsedTime() - calculaTempoEmInspecao();
-            infoTempoCont.changeMessage("Checkpoints atravessados: " + cont + " / Tempo decorrido: " + timeElapsed.toFixed(3) + " s");
+            infoTempoCont.changeMessage("Checkpoints atravessados: " + cont + "/" + num_checkpoints + " / Tempo decorrido: " + timeElapsed.toFixed(3) + " s");
         }
         if(cont == listaCheckpoints.length-1){
             timer.stop();
             var timeElapsed = timer.getElapsedTime() - calculaTempoEmInspecao();
-            infoTempoCont.changeMessage("Checkpoints atravessados: " + cont + " / Tempo decorrido: " + tempoFinal.toFixed(3) + " s");
+            infoTempoCont.changeMessage("Checkpoints atravessados: " + cont + "/" + num_checkpoints + " / Tempo decorrido: " + tempoFinal.toFixed(3) + " s");
         }
 
     }
@@ -193,6 +199,7 @@ export default function checkpoints() {
         listaCheckpoints.push(torus);
     }
 
+    infoTempoCont.changeMessage("Checkpoints atravessados: 0/" + (listaCheckpoints.length - 1) + " / Tempo decorrido: 0.000 s");
 
     return checkpointHolder;
 }

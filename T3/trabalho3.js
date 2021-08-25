@@ -31,6 +31,7 @@ var renderer = initRenderer();    // View function in util/utils
 var camera = initCamera(new THREE.Vector3(5.0, 5.0, 30.0)); // Init camera in this position
 var trackballControls = new TrackballControls(camera, renderer.domElement);
 trackballControls.enabled = false;
+var instrucaoAtiva = true;
 
 document.body.appendChild(stats.dom);
 camera.far = 10000;
@@ -44,6 +45,11 @@ var modoInspecaoAtivo = false;
 var cameraPilotoAtiva = false;
 var keyboard = new KeyboardState();
 var clock = new THREE.Clock();
+
+const spotLight = new THREE.SpotLight( 0xffffff );
+camera.add(spotLight);
+scene.add(camera);
+spotLight.visible = false;
 
 //////////// Sol ////////////////
 
@@ -106,8 +112,8 @@ function criaLuzDirecionalComSombraEstatica(scene_ref, x, z, d_shadow) {
 
     //Configura a luz
     light.target = ligthTargetHolder;
-    light.shadow.mapSize.width = 5000;
-    light.shadow.mapSize.height = 5000;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
     light.castShadow = true;
     light.shadow.autoUpdate = false;
     light.shadow.needsUpdate = true;
@@ -243,6 +249,77 @@ aviaoHolder.add(cameraPiloto);
 var cameraPosition = new THREE.Vector3(0.0, 8.0, -20.0);
 
 
+///////////// Áudio /////////////
+
+var listener = new THREE.AudioListener();
+  camera.add( listener );
+  cameraSimula.add( listener );
+  cameraPiloto.add( listener );
+
+// create a global audio source
+const sound = new THREE.Audio( listener );  
+
+// Create ambient sound
+var audioLoader = new THREE.AudioLoader();
+audioLoader.load( './assets/sounds/musica.mp3', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.4 );
+    sound.play();
+    sound.autoplay = true;
+});
+
+const aviaoSound = new THREE.Audio( listener );
+audioLoader.load( './assets/sounds/aviao.ogg', function ( buffer ) {
+  aviaoSound.setBuffer( buffer );
+  aviaoSound.setLoop( true );
+  aviaoSound.setVolume( 0.2 );
+} );
+
+const checkpointSound = new THREE.Audio( listener );
+audioLoader.load( './assets/sounds/checkpoint.wav', function ( buffer ) {
+    checkpointSound.setBuffer( buffer );
+    checkpointSound.setVolume( 0.5 );
+} );
+
+const fimPercursoSound = new THREE.Audio( listener );
+audioLoader.load( './assets/sounds/final_percurso.wav', function ( buffer ) {
+    fimPercursoSound.setBuffer( buffer );
+    fimPercursoSound.setVolume( 1.0 );
+} );
+
+export default function tocaSomCheckpoint(final){
+    if(final){
+        checkpointSound.pause();
+        fimPercursoSound.play();
+    } else {
+        checkpointSound.play();
+    }
+}
+
+
+///////////// Instruções /////////////
+
+var controls = new InfoBox();
+  controls.add("Controles:");
+  controls.addParagraph();
+  controls.add("Modos:");
+  controls.add("* Espaço: alterna entre inspeção/simulação");
+  controls.add("* C: alterna entre simulação/cockpit");
+  controls.addParagraph();
+  controls.add("Movimentação:");
+  controls.add("* Seta para cima: desce o avião");
+  controls.add("* Seta para baixo: sobe o avião");
+  controls.add("* Seta para a esquerda: vira o avião para a esquerda");
+  controls.add("* Seta para a direita: vira o avião para a direita");
+  controls.add("* Q: acelera o avião");
+  controls.add("* A: desacelera o avião");
+  controls.addParagraph();
+  controls.add("* Enter: mostra/oculta caminho");
+  controls.addParagraph();
+  controls.add("* H: mostra/oculta instruções");
+  controls.show();
+
 ///////////// Modos de câmera /////////////////////
 
 function alternaModo() {
@@ -260,6 +337,8 @@ function alternaModo() {
         ambienteHolder.visible = modoInspecaoAtivo===false;
         // Esconde os checkpoints no modo de inspeção
         checkpointHolder.visible = modoInspecaoAtivo===false;
+
+        spotLight.visible = modoInspecaoAtivo===true;
  
         // Esconde infobox do tempo
         ocultaInfoBox(modoInspecaoAtivo);
@@ -409,6 +488,14 @@ function movimentaAviao() {
         }
     }
 
+    if(speed > 0){
+        if(aviaoSound.isPlaying == false){
+            aviaoSound.play();
+        }
+    } else {
+        aviaoSound.pause();
+    }
+
     aplicaRotacao();
 
     // Aplica translação no avião
@@ -449,7 +536,68 @@ function aplicaRotacao(){
   }
 
 
+///////////// Tela de loading das texturas ////////////////////
+
+const texturas = [
+    "asfalto.jpg",
+    "concreto.jpg"/*,
+    "aviao_corpo.png",
+    "comunismo.jpg",
+    "corpo_opcao2.jpg",
+    "crown.png",
+    "opcao3.jpg",
+    "predio_com_janelas.jpg",
+    "wings.jpg"*/
+]
+
+const manager = new THREE.LoadingManager();
+manager.onStart = function (url, itemsLoaded, itemsTotal) {
+    //console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+    setProgresso(0);
+};
+
+manager.onLoad = function () {
+    //console.log('Loading complete!');
+    escondeTelaLoading();
+    //scene.add(criarCidade(texturasCarregadas));
+};
+
+manager.onProgress = function (url, itemsLoaded, itemsTotal) {
+    console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+    setProgresso(itemsLoaded / texturas.length);
+};
+
+function setProgresso(progresso){
+    if(progresso > 1){
+        progresso = 1;
+    }
+    if(progresso < 0){
+        progresso = 0;
+    }
+    let barraLoading = document.getElementById("barraLoading");
+    //console.log('barraLoading',barraLoading, `${200*progresso}px`)
+    barraLoading.style.width = `${200*progresso}px`;
+}
+function escondeTelaLoading(){
+    let telaLoading = document.getElementById("telaLoading");
+    telaLoading.style.display = 'none';
+}
+
+manager.onError = function (url) {
+    console.error('There was an error loading ' + url);
+};
+const loader = new THREE.TextureLoader(manager);
+var texturasCarregadas = {};
+for (let i = 0; i < texturas.length; i++) {
+    let caminho_textura = "assets\\textures\\" + texturas[i];
+    loader.load(caminho_textura, function (object) {
+        //Faz um dicionario com as texturas carregadas
+        texturasCarregadas[texturas[i]] = object;
+    });
+}
+
 //////////// Listen window size changes e render///////////////////
+
 window.addEventListener('resize', function () {
     if (modoInspecaoAtivo) {
         onWindowResize(camera, renderer);
@@ -495,4 +643,14 @@ function render() {
     if(!aviaoHolder.visible){
         aviaoHolder.visible=true;
     }
+
+    if(keyboard.down("H")) {
+        instrucaoAtiva = !instrucaoAtiva;
+        var infobox = document.getElementById("InfoxBox");
+        if(instrucaoAtiva){
+            infobox.style.display = 'block';
+        } else {
+            infobox.style.display = 'none';
+        }
+    } 
 }
