@@ -624,7 +624,7 @@ function geraArvore() {
 
 ///////////// Exporta o ambiente /////////////////
 
-export default function ambiente() {
+export default function ambiente(texturasCarregadas) {
   var arvoresHolder = new THREE.Object3D();
 
   //gera montanhas

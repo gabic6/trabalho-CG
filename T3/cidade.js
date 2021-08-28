@@ -163,17 +163,21 @@ scene.add(axesHelper);
 
 
 // create the ground plane
+
 var planeGeometry = new THREE.PlaneGeometry(2000, 2000, 1, 1);
 planeGeometry.translate(0.0, 0.0, 0.0);
 var planeMaterial = new THREE.MeshLambertMaterial({
-    color: 'rgb(89, 179, 0)',
-    //side: THREE.DoubleSide
+    color: 'rgb(89, 179, 0)'
 });
 var plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.rotateX(degreesToRadians(-90));
 plane.receiveShadow = true;
 scene.add(plane);
 
+function texturaPlanoPrincipal(){
+    let textura_chao_pedra = texturasCarregadas['grama_periferia.jpg'];
+    plane.material = configuraMaterial(textura_chao_pedra, 2000, 2000, 10);
+}
 
 ////////////// Aqui entra o código da cidade /////////////////////
 
@@ -211,50 +215,35 @@ function criaMeioFio(x, z, width, height, material) {
     return box;
 }
 
-// const posicoesXZPredios = [
-//     {x: -205, z: -236},
-//     {x: -140, z: -236},
-//     {x: -80, z: -236},
-//     {x: 95, z: -236},
-//     {x: -230, z: -125},
-//     {x: -155, z: -125},
-//     {x: -60, z: -150},
-//     {x: -60, z: -95},
-//     {x: 37.5, z: -125},
-//     {x: 132.5, z: -125},
-//     {x: -230, z: -40},
-//     {x: -150, z: -15},
-//     {x: -60, z: -15},
-//     {x: 37.5, z: -40},
-//     {x: 37.5, z: 15},
-//     {x: 107.5, z: -40},
-//     {x: 195, z: -5},
-//     {x: 107.5, z: 30.6},
-//     {x: 37.5, z: 90},
-//     {x: 37.5, z: 176.7},
-//     {x: 102.5, z: 175},
-//     {x: 195, z: 176.7},
-//     {x: 107.5, z: 90},
-//     // {x: 40, z: 280},
-//     {x: -80, z: 280},
-//     {x: -205, z: 280},
-//     {x: -60, z: 175},
-//     {x: -140, z: 175},
-//     {x: -230, z: 130},
-//     {x: 195, z: 109},
-//     {x:55,   z:-235}
-// ]
 
-function criarCidade(dicionarioMateriais) {
+
+function configuraMaterial(textura, plano_largura, plano_comprimento, dim_textura){
+    textura = textura.clone();
+    textura.needsUpdate = true;
+    var material = new THREE.MeshLambertMaterial({ 
+        color: '#ffffff',
+        map: textura
+    });
+    material.map.repeat.set(
+        Math.ceil(plano_largura / dim_textura),
+        Math.ceil(plano_comprimento / dim_textura)
+    );
+    material.map.wrapS = THREE.RepeatWrapping;
+    material.map.wrapT = THREE.RepeatWrapping;
+
+    return material;
+}
+
+function criarCidade(texturasCarregadas) {
     // Clona a textura do asfalto pra nao precisar carregar ela duas vezes
     // e também pra não atrapalhar as outras ruas horizontais
-    var asfaltoClonado = dicionarioMateriais['asfalto.jpg'].clone()
+    var asfaltoClonado = texturasCarregadas['asfalto.jpg'].clone()
     asfaltoClonado.needsUpdate = true;
 
     // Cria os materiais
     material_asfalto = new THREE.MeshLambertMaterial({ 
         color: '#ffffff', 
-        map: dicionarioMateriais['asfalto.jpg']
+        map: texturasCarregadas['asfalto.jpg']
     });
 
     material_asfalto_v = new THREE.MeshLambertMaterial({ 
@@ -268,7 +257,7 @@ function criarCidade(dicionarioMateriais) {
 
     material_concreto = new THREE.MeshLambertMaterial({ 
         color: '#ffffff',
-        map: dicionarioMateriais['conc02.jpg'] 
+        map: texturasCarregadas['conc02.jpg'] 
     });
     material_concreto.map.repeat.set(10,10);
     material_concreto.map.wrapS = THREE.RepeatWrapping;
@@ -276,7 +265,7 @@ function criarCidade(dicionarioMateriais) {
 
     material_grama = new THREE.MeshLambertMaterial({ 
         color: '#ffffff',
-        map: dicionarioMateriais['grama.jpg'] 
+        map: texturasCarregadas['grama.jpg'] 
     });
     material_grama.map.repeat.set(17,8);
     material_grama.map.wrapS = THREE.RepeatWrapping;
@@ -286,8 +275,12 @@ function criarCidade(dicionarioMateriais) {
     //     color: '#ffffff',
     //  });
     // material_fronteira_cidade = new THREE.MeshLambertMaterial({ 
-    //     color: '#ffffff'
-    //  });
+    //     color: '#ffffff',
+    //     map: texturasCarregadas['Grass0018_1_350.jpg'] 
+    // });
+    // material_grama.map.repeat.set(8,8);
+    // material_grama.map.wrapS = THREE.RepeatWrapping;
+    // material_grama.map.wrapT = THREE.RepeatWrapping;
 
     //Ruas
     cidadeHolder.add(criaPlano(0, -280, 20, 640, material_asfalto_v));
@@ -355,13 +348,29 @@ function criarCidade(dicionarioMateriais) {
     cidadeHolder.add(criaMeioFio(-120, 240, 120, 110, material_concreto));
 
     //Fronteiras da cidade
-    cidadeHolder.add(criaPlano(270, -310, 90, 700, material_fronteira_cidade));
-    cidadeHolder.add(criaPlano(210, -310, 60, 250, material_fronteira_cidade));
-    cidadeHolder.add(criaPlano(15, -310, 195, 30, material_fronteira_cidade));
-    cidadeHolder.add(criaPlano(-260, -310, 265, 30, material_fronteira_cidade));
-    cidadeHolder.add(criaPlano(-340, -310, 80, 700, material_fronteira_cidade));
-    cidadeHolder.add(criaPlano(-260, 360, 280, 30, material_fronteira_cidade));
-    cidadeHolder.add(criaPlano(20, 240, 250, 150, material_fronteira_cidade));
+    let textura_grama_periferia = texturasCarregadas['Grass0018_1_350.jpg'];
+    cidadeHolder.add(criaPlano(270, -310, 90, 700, configuraMaterial(textura_grama_periferia, 90, 700, 15)));
+    cidadeHolder.add(criaPlano(210, -310, 60, 250, configuraMaterial(textura_grama_periferia, 60, 250, 15)));
+    cidadeHolder.add(criaPlano(15, -310, 195, 30, configuraMaterial(textura_grama_periferia, 195, 30, 15)));
+    cidadeHolder.add(criaPlano(-260, -310, 265, 30, configuraMaterial(textura_grama_periferia, 265, 30, 15)));
+    cidadeHolder.add(criaPlano(-340, -310, 80, 700, configuraMaterial(textura_grama_periferia, 80, 700, 15)));
+    cidadeHolder.add(criaPlano(-260, 360, 280, 30, configuraMaterial(textura_grama_periferia, 280, 30, 15)));
+    cidadeHolder.add(criaPlano(20, 240, 250, 150, configuraMaterial(textura_grama_periferia, 250, 150, 15)));
+    
+    // Planos da periferia
+    let textura_fazendinha_feliz = texturasCarregadas['fazendinha_feliz.jpg'];
+    cidadeHolder.add(criaPlano(400, 600, 150, 150, configuraMaterial(textura_fazendinha_feliz, 150, 150, 150)));
+    
+    // Lago
+    var material_lago = new THREE.MeshLambertMaterial({ 
+        color: '#ffffff',
+        map: texturasCarregadas['lago.png'],
+        transparent: true
+    });
+    var lago = criaPlano(20, 240, 130, 84.5, material_lago);
+    lago.position.y=0.1;
+    lago.rotateZ(degreesToRadians(180));
+    cidadeHolder.add(lago);
 
     //Rua até o aeroporto
     cidadeHolder.add(criaPlano(5, -475, 10, 196, material_asfalto_v));
@@ -380,39 +389,110 @@ function criarCidade(dicionarioMateriais) {
         predio5,
         predio6
     ]
-    // for(let coord=0;coord<posicoesXZPredios.length;coord++){
-    //     var posPredio = posicoesXZPredios[coord];
-    //     var predioInd = Math.floor((predios.length * Math.random()));
-    //     var funcPredio = predios[predioInd];
-    //     cidadeHolder.add(funcPredio(posPredio.x,posPredio.z));
-    // }
+
     //predio1 - 30 comprimento e 30 largura
     //predio2 - 40 comprimento e 40 largura
     //predio3 - 60 comprimento e 50 largura
     //predio4 - 40 comprimento e 15 largura
     //predio5 - 60 comprimento e 60 largura
     //predio6 - 110 comprimento e 60 largura
+
+    //predio1  
+    cidadeHolder.add(predio1(107.5,-40,texturasCarregadas));
     
-    cidadeHolder.add(predio6(-80,290));
-    cidadeHolder.add(predio6(-202,290));
+    cidadeHolder.add(predio1(37.5,176.7,texturasCarregadas));
+    
+    var predio1_menor = predio1(0,0,texturasCarregadas);
+    predio1_menor.scale.multiplyScalar(0.75);
+    predio1_menor.position.set(-60,0,-150);
+    cidadeHolder.add(predio1_menor);
 
-    cidadeHolder.add(predio6(148,-123).rotateY(degreesToRadians(-90)));
+    cidadeHolder.add(predio1(-230,-125,texturasCarregadas));
 
-    // console.log(typeof(predio4(0,0)));
-    cidadeHolder.add(predio4(202,-10).scale.multiplyScalar(0.1));
+    cidadeHolder.add(predio1(-140,175,texturasCarregadas));
 
-    cidadeHolder.add(predio5(182,90));
+    //predio2
     cidadeHolder.add(predio2(182,180));
+    
+    var predio2_menor = predio2(145,30.6);
+    predio2_menor.scale.multiplyScalar(0.75);
+    cidadeHolder.add(predio2_menor);
+
+    cidadeHolder.add(predio2(-60,-15));
+
+    cidadeHolder.add(predio2(137.5,-235));
+
+    cidadeHolder.add(predio2(-140,-236));
+
+    //predio3
+    cidadeHolder.add(predio3(52,-110));
+    
+    cidadeHolder.add(predio3(122.5,90));
+
+    cidadeHolder.add(predio3(-216,130));
+
+    var predio3_menor=predio3(52,90);
+    predio3_menor.scale.multiplyScalar(0.8);
+    predio3_menor.position.y = -90*0.8+107;
+    cidadeHolder.add(predio3_menor);
+
+    cidadeHolder.add(predio3(-135,-110));
+    
+    //predio4
+    var predio4_maior = predio4(202,-10);
+    predio4_maior.scale.multiplyScalar(1.3);
+    cidadeHolder.add(predio4_maior);
 
     cidadeHolder.add(predio4(30,35).rotateY(degreesToRadians(90)));
 
-    cidadeHolder.add(predio1(107.5,-40));
+    cidadeHolder.add(predio4(-60,-78).rotateY(degreesToRadians(90)));
 
-    cidadeHolder.add(predio3(52,-110));
-    // cidadeHolder.add(predio1(-205, -236));
+    var predio4_maior2 = predio4_maior.clone();
+    predio4_maior2.position.set(-205,0,-236);
+    cidadeHolder.add(predio4_maior2);
+
+    cidadeHolder.add(predio4(-230,-40));
+    
+    //predio5
+    cidadeHolder.add(predio5(182,90));
+
+    cidadeHolder.add(predio5(-166,25).rotateY(degreesToRadians(90)));
+    
+    cidadeHolder.add(predio5(-63,160));
+
+    var predio5_menor = predio5(30,-48);
+    predio5_menor.scale.multiplyScalar(0.75);
+    cidadeHolder.add(predio5_menor);
+
+    cidadeHolder.add(predio5(-80,-236));
+
+    //predio6
+    cidadeHolder.add(predio6(-80,290));
+
+    cidadeHolder.add(predio6(-202,290));
+
+    cidadeHolder.add(predio6(148,-123).rotateY(degreesToRadians(-90)));
+    
+    var predio6_menor = predio6(0,0).rotateY(degreesToRadians(90));
+    predio6_menor.scale.multiplyScalar(0.75);
+    predio6_menor.position.set(120,23/2,200.5);
+    // predio6_menor.position.y =23/2 ;
+    cidadeHolder.add(predio6_menor);
+
+    var predio6_menor2 = predio6_menor.clone();
+    predio6_menor2.position.set(55,23/2,-235);
+    predio6_menor2.rotateY(degreesToRadians(180));
+    cidadeHolder.add(predio6_menor2);
+    
+    // predio6_menor.position.set(
+    //     15,
+    //     predio6_menor.position.y,
+    //     predio6_menor.position.z
+    // )
+
 
     // Posiciona o holder um pouco mais alto que o plano pra não dar conflito
-    cidadeHolder.position.set(0, 1.0, 0);
+    cidadeHolder.position.set(0, 0.1, 0);
 
     return cidadeHolder;
 }
@@ -424,7 +504,17 @@ function criarCidade(dicionarioMateriais) {
 const texturas = [
     "asfalto.jpg",
     "conc02.jpg",
-    "grama.jpg"/*,
+    "grama.jpg",
+    "grama_periferia.jpg",
+    "Grass0018_1_350.jpg",
+    "chao_pedra.jpg",
+    "fazendinha_feliz.jpg",
+    "lago.png",
+    "predio1_cano.jpg",
+    "predio1_sem_cano.jpg",
+    "predio1_caixinha_porta.jpg",
+    "predio1_caixinha.jpg",
+    "concreto.jpg"/*,
     "aviao_corpo.png",
     "comunismo.jpg",
     "corpo_opcao2.jpg",
@@ -442,10 +532,28 @@ manager.onStart = function (url, itemsLoaded, itemsTotal) {
 
 manager.onLoad = function () {
     //console.log('Loading complete!');
-    escondeTelaLoading();
-    scene.add(criarCidade(texturasCarregadas));
+    mostraBotaoContinuar();
 };
+function escondeTelaLoading(){
+    let telaLoading = document.getElementById("telaLoading");
+    telaLoading.style.display = 'none';
 
+    // Carrega os objetos que dependem das texturas
+    texturaPlanoPrincipal();
+    scene.add(criarCidade(texturasCarregadas));
+}
+function mostraBotaoContinuar(){
+    let btnContinuar = document.getElementById("btnContinuar");
+    let fundoLoading = document.getElementById("fundoLoading");
+    let txtLoading = document.getElementById("txtLoading");
+    btnContinuar.style.display = 'flex';
+    fundoLoading.style.display = 'none';
+    txtLoading.style.display = 'none';
+
+    btnContinuar.addEventListener("click", function() {
+        escondeTelaLoading();
+    });
+}
 manager.onProgress = function (url, itemsLoaded, itemsTotal) {
     //console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
     setProgresso(itemsLoaded / (texturas.length + 1));
@@ -459,13 +567,11 @@ function setProgresso(progresso){
         progresso = 0;
     }
     let barraLoading = document.getElementById("barraLoading");
-    //console.log('barraLoading',barraLoading, `${200*progresso}px`)
+    let txtLoading = document.getElementById("txtLoading");
     barraLoading.style.width = `${200*progresso}px`;
+    txtLoading.innerHTML = `Carregando ${Math.round(progresso*100)}%`
 }
-function escondeTelaLoading(){
-    let telaLoading = document.getElementById("telaLoading");
-    telaLoading.style.display = 'none';
-}
+
 
 manager.onError = function (url) {
     console.error('There was an error loading ' + url);

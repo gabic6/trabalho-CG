@@ -150,7 +150,7 @@ function criaCone(posicao) {
 
 // Aponta o objeto pra um ponto
 // https://threejs.org/docs/#api/en/core/Object3D.lookAt
-export default function checkpoints() {
+export default function checkpoints(texturasCarregadas) {
     
     var checkpointHolder = new THREE.Object3D();
     listaCheckpoints = [];
@@ -225,7 +225,7 @@ var pontos = [
 ];
 
 
-export function caminho() {
+export function caminho(texturasCarregadas) {
     
     const curve = new THREE.CatmullRomCurve3( pontos);
     let numSegmentos = 500;

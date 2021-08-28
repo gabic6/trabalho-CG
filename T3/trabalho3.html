@@ -16,29 +16,57 @@
         justify-content: center;
         align-items: center;
         z-index: 9000;
-        background-color: black;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
+        background-image: url("./assets/textures/606894.jpg");
+        background-color: #cccccc;
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-size: cover; /* Resize the background image to cover the entire container */
       }
       .loading {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
+        background-color: #0000005b;
+        border-radius: 10px;
+        padding: 16px;
       }
       .txtLoading {
         color: #FFF;
+        padding-bottom: 6px;
+        font-size: 16px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
       .fundoLoading {
         background-color: red;
         width: 200px;
         height: 20px;
+        border-radius: 10px;
+        overflow: hidden;
       }
       .barraLoading {
         background-color: yellow;
         height: 20px;
         width: 0
+      }
+      .btnLoading {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: red;
+        border: 2px solid yellow;
+        border-radius: 15px;
+        color: white;
+        width: 150px;
+        height: 30px;
+        font-size: 16px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 600;
       }
     </style>
 </head>
@@ -51,9 +79,10 @@
   <div id="telaLoading" class="telaLoading">
     <div class="loading">
       <span id="txtLoading" class="txtLoading">Carregando...</span>
-      <div class="fundoLoading">
-        <div id="barraLoading" class="barraLoading"/>
+      <div id="fundoLoading" class="fundoLoading">
+        <div id="barraLoading" class="barraLoading"></div>
       </div>
+      <button id="btnContinuar" class="btnLoading">Continuar</button>
     </div>
   </div>
 </body>

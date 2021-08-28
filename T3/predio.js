@@ -16,31 +16,51 @@ import {
     objeto.position.set(x + largura/2.0, altura/2.0, z + comprimento / 2.0);
 }
 
-export function predio1(x, z){
-    var material = new THREE.MeshLambertMaterial({ color: '#83BAD6'});
+export function predio1(x, z,texturasCarregadas){
 
+    // var material = new THREE.MeshLambertMaterial({ color: '#83BAD6'});
+    var box_material = [
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_sem_cano.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_sem_cano.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide})
+    
+    ];
     const largura = 30; // x
     const comprimento = 30; // z
     const altura = 140; // y
     const boxGeometry = new THREE.BoxGeometry( largura, altura, comprimento );
-    const box = new THREE.Mesh( boxGeometry, material );
+    const box = new THREE.Mesh( boxGeometry, box_material );
     box.castShadow = true;
     box.receiveShadow = true;
     // Conversão de coordenadas do draw.io pro threejs
     box.position.set(x + largura/2.0, altura / 2.0, z + comprimento/2.0);
 
     //caixinha de cima
-    var material2 = new THREE.MeshLambertMaterial({ color: 'red'});
+    // var material2 = new THREE.MeshLambertMaterial({ color: 'red'});
+    var box_material2 = [
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha_porta.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide}),
+        new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide})
+    ];
     const altura_caixinha = 10;
     const largura_caixinha = 20;
     const geometria_caixinha = new THREE.BoxGeometry( largura_caixinha, altura_caixinha, largura_caixinha );
-    const caixinha = new THREE.Mesh( geometria_caixinha, material2 );
+    const caixinha = new THREE.Mesh( geometria_caixinha, box_material2 );
     caixinha.castShadow = true;
     caixinha.receiveShadow = true;
     caixinha.position.set(0,1+ altura/2,0);
 
     box.add(caixinha);
-    return box; 
+
+    var objeto = new THREE.Object3D();
+    objeto.add(box);
+    return objeto; 
 }
 
 export function predio2(x, z){
@@ -96,7 +116,10 @@ export function predio2(x, z){
     triangulo.position.set(-largura/3.0, altura/2,0);
 
     box.add(triangulo)
-    return box; 
+
+    var holderObj = new THREE.Object3D();
+    holderObj.add(box);
+    return holderObj; 
 }
 
 export function predio3(x, z){

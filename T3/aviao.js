@@ -5,7 +5,7 @@ import {
     degreesToRadians,
 } from "../libs/util/util.js";
 
-export default function aviao() {
+export default function aviao(texturasCarregadas) {
     /////Textura
     var textureLoader = new THREE.TextureLoader();
     var corpo  = textureLoader.load('assets/textures/opcao3.jpg');
