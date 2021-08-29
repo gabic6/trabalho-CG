@@ -237,7 +237,8 @@ m2Obj1.position.set(-40,30,10);
   m2Obj1.add(m2Obj2);
 
   m2Obj1.scale.set( 3, 3, 3 );
-  m2Obj1.position.set(350,90,-80);
+  //m2Obj1.position.set(350,90,-80);
+  m2Obj1.position.set(500,90,-600);
 
 
 //// MONTANHA 3 ////
@@ -331,7 +332,8 @@ m3Obj2.position.set(24,-5.625,-6);
 m3Obj1.add(m3Obj2);
 
 m3Obj1.scale.set( 4, 4, 4 );
-m3Obj1.position.set(-500,100,-150);
+//m3Obj1.position.set(-500,100,-150);
+m3Obj1.position.set(-800,100,-800);
 
   return {m1Obj1, m2Obj1, m3Obj1};
 }

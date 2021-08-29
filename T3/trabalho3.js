@@ -1,11 +1,14 @@
 import * as THREE from '../../build/three.module.js';
 import Stats from '../../build/jsm/libs/stats.module.js';
+import { OBJLoader } from '../../build/jsm/loaders/OBJLoader.js'; 
+import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js';
 import { TrackballControls } from '../../build/jsm/controls/TrackballControls.js';
 import {
     InfoBox,
     SecondaryBox,
     initRenderer,
     initCamera,
+    getMaxSize,
     degreesToRadians,
     onWindowResize,
     initDefaultBasicLight,
@@ -22,12 +25,15 @@ import checkpoints, {
     registraTimestampInspecao,
     ocultaInfoBox
 } from './caminho_checkpoint.js';
+import criarCidade from './cidade.js';
 
 ////////// Coisas da cena, como renderização, camera/////////////////////
 
 var stats = new Stats();          // To show FPS information
 var scene = new THREE.Scene();    // Create main scene
+var scene1 = new THREE.Scene();
 var renderer = initRenderer();    // View function in util/utils
+renderer.autoClear = false;
 var camera = initCamera(new THREE.Vector3(5.0, 5.0, 30.0)); // Init camera in this position
 var trackballControls = new TrackballControls(camera, renderer.domElement);
 trackballControls.enabled = false;
@@ -40,7 +46,12 @@ camera.updateProjectionMatrix();
 
 const lightHem = new THREE.HemisphereLight('rgb(255, 255, 255)', 'rgb(47, 79, 79)', 0.5);
 scene.add(lightHem);
-scene.background = new THREE.Color('rgb(179, 217, 255)');
+//scene.background = new THREE.Color('rgb(179, 217, 255)');
+scene.background = null;
+
+const lightSb = new THREE.PointLight('rgb(255, 255, 255)', 2.0);
+lightSb.position.set(0.0, -1200.0, 0.0);
+scene1.add(lightSb);
 
 var modoInspecaoAtivo = false;
 var cameraPilotoAtiva = false;
@@ -77,7 +88,7 @@ function setDirectionalLighting(position)
   
   var d = 20;
   dirLight.shadow.camera.near = 1;
-  dirLight.shadow.camera.far = 8000;
+  dirLight.shadow.camera.far = 500;
   dirLight.shadow.camera.left = -d;
   dirLight.shadow.camera.right = d;
   dirLight.shadow.camera.top = d;
@@ -88,6 +99,12 @@ function setDirectionalLighting(position)
   
   dirLight.decay = 1;
   dirLight.penumbra = 0.1;
+
+  //Helpers de visualização da luz e da camera de projeção de sombras
+//   const helper = new THREE.DirectionalLightHelper(dirLight, 5);
+//   const helper2 = new THREE.CameraHelper(dirLight.shadow.camera);
+//   scene.add(helper);
+//   scene.add(helper2);
 
   dirLight.position.copy(lightHolderPosition);
   lightSphere.position.copy(lightHolderPosition);
@@ -137,7 +154,7 @@ function criaLuzDirecionalComSombraEstatica(scene_ref, x, z, d_shadow) {
     // Posição do holder
     lightHolder.position.set(x, 0, z);
 
-    // Helpers de visualização da luz e da camera de projeção de sombras
+    //Helpers de visualização da luz e da camera de projeção de sombras
     // const helper = new THREE.DirectionalLightHelper(light, 5);
     // const helper2 = new THREE.CameraHelper(light.shadow.camera);
     // scene_ref.add(helper);
@@ -168,9 +185,15 @@ var light2 = criaLuzDirecionalComSombraEstatica(scene, -raioLuz, -raioLuz, raioL
 var light3 = criaLuzDirecionalComSombraEstatica(scene, raioLuz, -raioLuz, raioLuz );
 var light4 = criaLuzDirecionalComSombraEstatica(scene, raioLuz, raioLuz, raioLuz );
 
+/*light1.visible = false;
+light2.visible = false;
+light3.visible = false;
+light4.visible = false;*/
+
 /////////// Câmera simulação //////////////////
 
-var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
+//var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
+var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 25000);
 cameraSimula.lookAt(0, 0, 0);
 cameraSimula.position.set(0.0, 0.0, -0.1);
 
@@ -187,7 +210,8 @@ scene.add(cameraSimulaHolderHolder);
 
 /////////// Câmera do Piloto //////////////////
 
-var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
+//var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
+var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 25000);
 cameraPiloto.lookAt(0, 0, 0.1);
 cameraPiloto.position.set(0.0, 1.3, -1.8);
 
@@ -199,6 +223,9 @@ cameraPiloto.position.set(0.0, 1.3, -1.8);
 
 ////////////// Objetos /////////////////////
 var plane = new THREE.Object3D();
+var planoLim = new THREE.Object3D();
+var skybox = new THREE.Object3D();
+var cidade = new THREE.Object3D();
 let ambienteHolder = new THREE.Object3D();
 let checkpointHolder = new THREE.Object3D();
 let caminho_curva = new THREE.Object3D();
@@ -221,6 +248,37 @@ function carregaObjetos(){
     plane.receiveShadow = true;
     scene.add(plane);
 
+    var planeGeom = new THREE.PlaneGeometry(18000, 18000, 800, 800);
+    var planeMat = new THREE.MeshLambertMaterial({
+        color:'rgb(21, 79, 6)',
+    });
+    planoLim = new THREE.Mesh(planeGeom, planeMat);
+    planoLim.rotateX(degreesToRadians(-90));
+    planeGeom.translate(0.0, 0.0, -0.1);
+    planoLim.receiveShadow = true;
+    scene.add(planoLim);
+
+    var geomSkybox = new THREE.BoxGeometry(18000, 18000, 18000);
+
+    geomSkybox.translate(0.0, -1200.0, 0.0);
+
+    var matSkybox = [
+         new THREE.MeshLambertMaterial({map:texturasCarregadas["Daylight_Box_Right.png"],side:THREE.BackSide}), // à direita do avião
+         new THREE.MeshLambertMaterial({map:texturasCarregadas["Daylight_Box_Left.png"],side:THREE.BackSide}), // à esquerda do avião
+         new THREE.MeshLambertMaterial({map:texturasCarregadas["Daylight_Box_Top.png"],side:THREE.BackSide}), // acima
+         new THREE.MeshLambertMaterial({map:texturasCarregadas["Daylight_Box_Bottom.png"],side:THREE.BackSide}), // abaixo
+         new THREE.MeshLambertMaterial({map:texturasCarregadas["Daylight_Box_Front.png"],side:THREE.BackSide}), // na frente do avião
+         new THREE.MeshLambertMaterial({map:texturasCarregadas["Daylight_Box_Back.png"],side:THREE.BackSide}) // atrás do avião
+        
+    ];
+
+    skybox = new THREE.Mesh(geomSkybox, matSkybox);
+    scene1.add(skybox);
+    
+    //Adiciona a cidade
+    cidade = criarCidade(texturasCarregadas, objetoExterno);
+    scene.add(cidade);
+
     // Adiciona os meshes do ambiente (arvores e montanhas)
     ambienteHolder = ambiente(texturasCarregadas);
     scene.add(ambienteHolder);
@@ -239,7 +297,7 @@ function carregaObjetos(){
     eixo_helice = aviaoObj.eixo_helice;
     scene.add(aviaoHolder);
 
-    // Adiciona a câmera com a visão do piloto do avião (isso é um extra)
+    // Adiciona a câmera com a visão do piloto do avião
     aviaoHolder.add(cameraPiloto);
 
     // Define que a luz direcional vai iluminar o avião
@@ -314,9 +372,10 @@ function alternaModo() {
     if (keyboard.down("space")) {
         modoInspecaoAtivo = !modoInspecaoAtivo;
 
-        // Esconde o plano no modo inspeção
+        // Esconde os planos no modo inspeção
         plane.visible = modoInspecaoAtivo === false;
-        // Eesconde caminho no modo de inspeção
+        planoLim.visible = modoInspecaoAtivo === false;
+        // Esconde caminho no modo de inspeção
         caminho_curva.visible = modoInspecaoAtivo===false;
         // Esconde os elementos do ambiente no modo de inspeção
         ambienteHolder.visible = modoInspecaoAtivo===false;
@@ -330,6 +389,9 @@ function alternaModo() {
         light2.visible = modoInspecaoAtivo===false;
         light3.visible = modoInspecaoAtivo===false;
         light4.visible = modoInspecaoAtivo===false;
+
+        skybox.visible = modoInspecaoAtivo===false;
+        cidade.visible = modoInspecaoAtivo===false;
 
  
         // Esconde infobox do tempo
@@ -507,13 +569,13 @@ function movimentaAviao() {
     aviaoHolder.translateZ(speed * delta);
 
     // Impede que o avião "entre" no chão
-    if(aviaoHolder.position.y < 1.0){
-        aviaoHolder.position.set(
-            aviaoHolder.position.x,
-            1.0,
-            aviaoHolder.position.z
-        )
-    }
+     if(aviaoHolder.position.y < 1.0){
+         aviaoHolder.position.set(
+             aviaoHolder.position.x,
+             1.0,
+             aviaoHolder.position.z
+         )
+     }
 
     // Roda a hélice
     eixo_helice.rotateY(0.5 * speed * delta);
@@ -544,6 +606,7 @@ function aplicaRotacao(){
 ///////////// Tela de loading das texturas ////////////////////
 
 const texturas = [
+    // Texturas da cidade e periferia
     "asfalto.jpg",
     "conc02.jpg",
     "grama.jpg",
@@ -552,13 +615,35 @@ const texturas = [
     "chao_pedra.jpg",
     "fazendinha_feliz.jpg",
     "lago.png",
+    "predio2_cano.jpg",
+    "predio2_sem_cano.jpg",
+    "predio2_caixinha_porta.jpg",
+    "predio2_caixinha.jpg",
+    "concreto.jpg",
+    "container_roof.jpg",
+    "apartment_block5.png",
+    "predio1_teste.jpg",
+    "predio2_triangulo_frente.jpg",
+    "predio2_triangulo_lados.jpg",
+    "predio2_roof.jpg",
+    "building_factory.png",
+    "brick01.jpg",
+    "building_l2.png",
+    // Texturas do avião
     "aviao_corpo.png",
     "comunismo.jpg",
     "corpo_opcao2.jpg",
     "crown.png",
     "opcao3.jpg",
     "predio_com_janelas.jpg",
-    "wings.jpg"
+    "wings.jpg",
+    // Texturas da skybox
+    "Daylight_Box_Back.png",
+    "Daylight_Box_Bottom.png",
+    "Daylight_Box_Front.png",
+    "Daylight_Box_Left.png",
+    "Daylight_Box_Right.png",
+    "Daylight_Box_Top.png"
 ]
 
 const manager = new THREE.LoadingManager();
@@ -576,7 +661,7 @@ manager.onLoad = function () {
 };
 
 manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-    console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+    //console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
     setProgresso(itemsLoaded / (texturas.length + 5));
 };
 
@@ -674,6 +759,89 @@ export default function tocaSomCheckpoint(final){
     }
 }
 
+///////////// Objeto externo //////////////
+
+
+var objetoExterno = null;
+
+function loadOBJFile(modelPath, modelName, desiredScale, angle, visibility)
+{
+    var currentModel = modelName;
+    //var manager = new THREE.LoadingManager( );
+
+  var mtlLoader = new MTLLoader(manager);
+  mtlLoader.setPath( modelPath );
+  mtlLoader.load( modelName + '.mtl', function ( materials ) {
+      materials.preload();
+
+      var objLoader = new OBJLoader(manager);
+      objLoader.setMaterials(materials);
+      objLoader.setPath(modelPath);
+      objLoader.load( modelName + ".obj", function ( obj ) {
+        obj.visible = visibility;
+        obj.name = modelName;
+        // Set 'castShadow' property for each children of the group
+        obj.traverse( function (child)
+        {
+          child.castShadow = true;
+        });
+
+        obj.traverse( function( node )
+        {
+          if( node.material ) node.material.side = THREE.DoubleSide;
+        });
+
+
+        var obj = normalizeAndRescale(obj, desiredScale);
+        var obj = fixPosition(obj);
+        obj.rotateY(degreesToRadians(angle));
+        
+        obj.translateX(-85.0);
+        obj.translateY(1.0);
+        obj.translateZ(100.0);
+        
+        objetoExterno = obj;
+        console.log('************************',objetoExterno, obj);
+        //scene.add ( obj );
+        
+      }, onProgress, onError );
+  });
+}
+
+function onError(erro) {
+    console.error(erro);
+};
+
+function onProgress ( xhr, model ) {
+    if ( xhr.lengthComputable ) {
+      var percentComplete = xhr.loaded / xhr.total * 100;
+      console.log("Loading... " + Math.round( percentComplete, 2 ) + '% processed' );
+    }
+}
+
+// Normalize scale and multiple by the newScale
+function normalizeAndRescale(obj, newScale)
+{
+  var scale = getMaxSize(obj); // Available in 'utils.js'
+  obj.scale.set(newScale * (1.0/scale),
+                newScale * (1.0/scale),
+                newScale * (1.0/scale));
+  return obj;
+}
+
+function fixPosition(obj)
+{
+  // Fix position of the object over the ground plane
+  var box = new THREE.Box3().setFromObject( obj );
+  if(box.min.y > 0)
+    obj.translateY(-box.min.y);
+  else
+    obj.translateY(-1*box.min.y);
+  return obj;
+}
+
+loadOBJFile('./assets/objects/', 'Decoration 14', 30.0, 0, true);
+
 //////////// Listen window size changes e render///////////////////
 
 window.addEventListener('resize', function () {
@@ -707,9 +875,13 @@ function render() {
     if (modoInspecaoAtivo) {
         renderer.render(scene, camera) // Render scene
     } else if (cameraPilotoAtiva) {
+        renderer.clear();
         renderer.render(scene, cameraPiloto) // Render scene
+        renderer.render(scene1, cameraPiloto)
     } else {
+        renderer.clear();
         renderer.render(scene, cameraSimula) // Render scene
+        renderer.render(scene1, cameraSimula)
     }
 
     stats.end();
@@ -720,7 +892,7 @@ function render() {
     // no chão.
     if(!aviaoHolder.visible){
         aviaoHolder.visible=true;
-    }
+    }    
 
     // Visualização das instruções
     if(keyboard.down("H")) {
