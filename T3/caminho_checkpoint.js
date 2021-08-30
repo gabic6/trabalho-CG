@@ -206,23 +206,24 @@ export default function checkpoints(texturasCarregadas) {
 
 // Pontos onde vão aparecer os checkpoints
 var pontos = [
-    new THREE.Vector3(0,25,143.8),//A
-    new THREE.Vector3(222.1,30,467.1),//B
-    new THREE.Vector3(-236.5,60,466.1),//C
-    new THREE.Vector3(-558.9,40,688.5),//D
-    new THREE.Vector3(-825.7, 55, 288.3),//E
-    new THREE.Vector3(-650.0,45, -170.3),//F
-    new THREE.Vector3(120.0,60,-420.9),//G
-    new THREE.Vector3(291.2,40, -182.5),//H
-    new THREE.Vector3(609.0,20,-335.3),//I
-    new THREE.Vector3(902.4,30,-249.8),//J
-    new THREE.Vector3(853.5,55,-628.7),//K
-    new THREE.Vector3(560.1,60,-812.1),//L
-    new THREE.Vector3(-130.5,70,-793.7),//M
-    new THREE.Vector3(-500,60,-500),//N
-    new THREE.Vector3(0,30,-194),//O
-    new THREE.Vector3(0,25,143.8)//A
+    new THREE.Vector3(-685, 25, 85),//A
+    new THREE.Vector3(-545, 30, 425),//B
+    new THREE.Vector3(-180, 60, 580),//C
+    new THREE.Vector3(13, 40, 315),//D
+    new THREE.Vector3(10, 55, -165),//E
+    new THREE.Vector3(108, 45, -625),//F
+    new THREE.Vector3(589, 60, -615),//G
+    new THREE.Vector3(735, 40, -155),//H
+    new THREE.Vector3(745, 20, 245),//I
+    new THREE.Vector3(525, 30, 515),//J
+    new THREE.Vector3(183, 55, 355),//K
+    new THREE.Vector3(-165, 60, 90),//L
+    new THREE.Vector3(-160, 70, -385),//M
+    new THREE.Vector3(-335, 60, -785),//N
+    new THREE.Vector3(-685, 30, -550),//O
+    new THREE.Vector3(-685, 25, 85),//A
 ];
+
 
 
 export function caminho(texturasCarregadas) {

@@ -35,7 +35,7 @@ var trackballControls = new TrackballControls(camera, renderer.domElement);
 //trackballControls.enabled = false;
 
 // Camera de inspeção da cidade
-const cameraCidade = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+const cameraCidade = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
 cameraCidade.position.set(0, 0, 0);
 cameraCidade.lookAt(new THREE.Vector3(0, 0, 1));
 cameraCidade.up.set(0,1,0);
@@ -61,7 +61,7 @@ var clock = new THREE.Clock();
 //////////// Sol ////////////////
 
 // Posição relativa da luz ao avião
-var lightHolderPosition = new THREE.Vector3(100.0, 200.0, 0.0);
+var lightHolderPosition = new THREE.Vector3(500.0, 1000.0, 0.0);
 // Vector que guarda a posição da luz em relação ao mundo
 var lightPosition = new THREE.Vector3(0, 3, 0);
 // Cor da luz
@@ -123,7 +123,7 @@ function criaLuzDirecionalComSombraEstatica(scene_ref, x, z, d_shadow) {
     light.shadow.autoUpdate = false;
     light.shadow.needsUpdate = true;
     light.shadow.camera.near = 1;
-    light.shadow.camera.far = 800;
+    light.shadow.camera.far = 1800;
     light.shadow.camera.left = -d_shadow;
     light.shadow.camera.right = d_shadow;
     light.shadow.camera.top = d_shadow;
@@ -155,16 +155,18 @@ function criaLuzDirecionalComSombraEstatica(scene_ref, x, z, d_shadow) {
     );
 
     scene_ref.add(ligthTargetHolder);
+
+    return light;
 }
 
 // Cria as 4 luzes, uma em cada quadrante do plano pra projeção das 
 // sombras estáticas
 let dimensaoLuz = 1000;
 let raioLuz = dimensaoLuz / 2.0;
-criaLuzDirecionalComSombraEstatica(scene, -raioLuz, raioLuz, raioLuz);
-criaLuzDirecionalComSombraEstatica(scene, -raioLuz, -raioLuz, raioLuz);
-criaLuzDirecionalComSombraEstatica(scene, raioLuz, -raioLuz, raioLuz);
-criaLuzDirecionalComSombraEstatica(scene, raioLuz, raioLuz, raioLuz);
+var light1 = criaLuzDirecionalComSombraEstatica(scene, -raioLuz, raioLuz, raioLuz );
+var light2 = criaLuzDirecionalComSombraEstatica(scene, -raioLuz, -raioLuz, raioLuz );
+var light3 = criaLuzDirecionalComSombraEstatica(scene, raioLuz, -raioLuz, raioLuz );
+var light4 = criaLuzDirecionalComSombraEstatica(scene, raioLuz, raioLuz, raioLuz );
 
 
 ///////////Mostrar axis////////////////
@@ -234,7 +236,19 @@ const texturas = [
     "predio2_roof.jpg",
     "building_factory.png",
     "brick01.jpg",
-    "building_l2.png"/*,
+    "building_l2.png",
+    "predio1_caixinha_paredes.jpg",
+    "predio6_caixinha_maior.jpg",
+    "predio6_caixinha_menor.jpg",
+    "predio6_maior.jpg",
+    "predio6_menor.jpg",
+    "predio3_andar1.jpg",
+    "predio3_andar2.jpg",
+    "predio3_lado1.jpg",
+    "predio3_lado2.jpg",
+    "moita1.png",
+    "areia.png",
+    "mancha.png"/*,
     "aviao_corpo.png",
     "comunismo.jpg",
     "corpo_opcao2.jpg",
@@ -261,6 +275,12 @@ function escondeTelaLoading(){
     // Carrega os objetos que dependem das texturas
     texturaPlanoPrincipal();
     scene.add(criarCidade(texturasCarregadas, testeObjeto));
+
+    // Atualiza as sombras estáticas
+    light1.shadow.needsUpdate = true;
+    light2.shadow.needsUpdate = true;
+    light3.shadow.needsUpdate = true;
+    light4.shadow.needsUpdate = true;
 }
 function mostraBotaoContinuar(){
     let btnContinuar = document.getElementById("btnContinuar");

@@ -501,61 +501,245 @@ function arvoreModelo4(x, z) {
   return arvoreHolder;
 }
 
+
+function moitaModelo1(x, z, texturasCarregadas) {
+  // Cria os materiais
+  var material_moita = new THREE.MeshLambertMaterial({ 
+    color: '#ffffff', 
+    map: texturasCarregadas["moita1.png"],
+    side:THREE.DoubleSide,
+    transparent: true
+  });
+  material_moita.map.repeat.set(5,1);
+  material_moita.map.wrapS = THREE.RepeatWrapping;
+  material_moita.map.wrapT = THREE.RepeatWrapping;
+
+  var moitaHolder = new THREE.Object3D();
+
+  var planeGeometry = new THREE.PlaneGeometry(20, 3, 1, 1);
+  var plane1 = new THREE.Mesh(planeGeometry, material_moita);
+  plane1.position.set(x, 1.5, z);
+  plane1.receiveShadow = true;
+  plane1.castShadow = true;
+
+  var plane2 = new THREE.Mesh(planeGeometry, material_moita);
+  plane2.position.set(x+2, 1.5, z+2);
+  plane2.receiveShadow = true;
+  plane2.castShadow = true;
+
+  var plane3 = new THREE.Mesh(planeGeometry, material_moita);
+  plane3.position.set(x+2, 1.5, z-2);
+  plane3.receiveShadow = true;
+  plane3.castShadow = true;
+
+  moitaHolder.add(plane1);
+  moitaHolder.add(plane2);
+  moitaHolder.add(plane3);
+  return moitaHolder;
+}
+
 ///////////////// Criação do grid onde as arvores vão aparecer //////////////////
 
-//3 circulos que delimitam a area das montanhas
-function limiteMontanhas(x, z) {
-  var posMontanha1 = new THREE.Vector3(40, 0, 800);
-  var posMontanha2 = new THREE.Vector3(350, 0, -80);
-  var posMontanha3 = new THREE.Vector3(-500, 0, -150);
-  var posAtual = new THREE.Vector3(x, 0, z);
+// //3 circulos que delimitam a area das montanhas
+// function limiteMontanhas(x, z) {
+//   var posMontanha1 = new THREE.Vector3(40, 0, 800);
+//   var posMontanha2 = new THREE.Vector3(350, 0, -80);
+//   var posMontanha3 = new THREE.Vector3(-500, 0, -150);
+//   var posAtual = new THREE.Vector3(x, 0, z);
 
-  var limMontanha1 = 280;
-  var limMontanha2 = 150;
-  var limMontanha3 = 150;
+//   var limMontanha1 = 280;
+//   var limMontanha2 = 150;
+//   var limMontanha3 = 150;
 
-  var dentroMontanha1 = posMontanha1.distanceTo(posAtual) < limMontanha1;
-  var dentroMontanha2 = posMontanha2.distanceTo(posAtual) < limMontanha2;
-  var dentroMontanha3 = posMontanha3.distanceTo(posAtual) < limMontanha3;
+//   var dentroMontanha1 = posMontanha1.distanceTo(posAtual) < limMontanha1;
+//   var dentroMontanha2 = posMontanha2.distanceTo(posAtual) < limMontanha2;
+//   var dentroMontanha3 = posMontanha3.distanceTo(posAtual) < limMontanha3;
 
-  return !dentroMontanha1 && !dentroMontanha2 && !dentroMontanha3;
-}
+//   return !dentroMontanha1 && !dentroMontanha2 && !dentroMontanha3;
+// }
 
-// Retangulo que delimita uma "pista" pro avião delocar, que não contenha arvores
-function limitePistaAviao(x, z){
-  var box = new THREE.Box2( new THREE.Vector2(-30,-30), new THREE.Vector2(30,300) )
-  return !box.containsPoint(new THREE.Vector2(x,z));
-}
+// // Retangulo que delimita uma "pista" pro avião delocar, que não contenha arvores
+// function limitePistaAviao(x, z){
+//   var box = new THREE.Box2( new THREE.Vector2(-30,-30), new THREE.Vector2(30,300) )
+//   return !box.containsPoint(new THREE.Vector2(x,z));
+// }
 
-// Circulos e retângulos onde não vai ser posicionada nenhuma arvore
-function limitesArbitrarios(x, z){
-  var box = new THREE.Box2( new THREE.Vector2(500,0), new THREE.Vector2(2000,2000) );
-  var box2 = new THREE.Box2( new THREE.Vector2(-2000,-2000), new THREE.Vector2(-680,-300) );
+// // Circulos e retângulos onde não vai ser posicionada nenhuma arvore
+// function limitesArbitrarios(x, z){
+//   var box = new THREE.Box2( new THREE.Vector2(500,0), new THREE.Vector2(2000,2000) );
+//   var box2 = new THREE.Box2( new THREE.Vector2(-2000,-2000), new THREE.Vector2(-680,-300) );
 
-  var pos1 = new THREE.Vector3(-580, 0, 250);
-  var posAtual = new THREE.Vector3(x, 0, z);
-  var dentroLim1 = pos1.distanceTo(posAtual) < 200;
+//   var pos1 = new THREE.Vector3(-580, 0, 250);
+//   var posAtual = new THREE.Vector3(x, 0, z);
+//   var dentroLim1 = pos1.distanceTo(posAtual) < 200;
 
-  var pos2 = new THREE.Vector3(-250, 0, 100);
-  var posAtual = new THREE.Vector3(x, 0, z);
-  var dentroLim2 = pos2.distanceTo(posAtual) < 150;
+//   var pos2 = new THREE.Vector3(-250, 0, 100);
+//   var posAtual = new THREE.Vector3(x, 0, z);
+//   var dentroLim2 = pos2.distanceTo(posAtual) < 150;
 
-  var pos3 = new THREE.Vector3(450, 0, -600);
-  var posAtual = new THREE.Vector3(x, 0, z);
-  var dentroLim3 = pos3.distanceTo(posAtual) < 200;
+//   var pos3 = new THREE.Vector3(450, 0, -600);
+//   var posAtual = new THREE.Vector3(x, 0, z);
+//   var dentroLim3 = pos3.distanceTo(posAtual) < 200;
 
-  var pos4 = new THREE.Vector3(100, 0, -710);
-  var posAtual = new THREE.Vector3(x, 0, z);
-  var dentroLim4 = pos4.distanceTo(posAtual) < 150;
+//   var pos4 = new THREE.Vector3(100, 0, -710);
+//   var posAtual = new THREE.Vector3(x, 0, z);
+//   var dentroLim4 = pos4.distanceTo(posAtual) < 150;
 
-  return (
-    !box.containsPoint(new THREE.Vector2(x,z)) &&
-    !box2.containsPoint(new THREE.Vector2(x,z)) &&
-    !dentroLim1 &&
-    !dentroLim2 &&
-    !dentroLim3 &&
-    !dentroLim4
-  );
+//   return (
+//     !box.containsPoint(new THREE.Vector2(x,z)) &&
+//     !box2.containsPoint(new THREE.Vector2(x,z)) &&
+//     !dentroLim1 &&
+//     !dentroLim2 &&
+//     !dentroLim3 &&
+//     !dentroLim4
+//   );
+// }
+
+const limitesGeracaoArvores = [
+  {// area 1
+    x: -830+(560/2.0),
+    z: -620+(1050/2.0),
+    largura: 560,
+    comprimento: 1050,
+    permiteDentro: true,
+    tipo: 'retangular'
+  },
+  {// area 2
+    x: -700+(30/2.0),
+    z: -575+(690/2.0),
+    largura: 30,
+    comprimento: 690,
+    permiteDentro: false,
+    tipo: 'retangular'
+  },
+  {// area 3
+    x: -670+(740/2.0),
+    z: -530+(100/2.0),
+    largura: 740,
+    comprimento: 100,
+    permiteDentro: false,
+    tipo: 'retangular'
+  },
+  {// area 4
+    x: -260+(470/2.0),
+    z: -620+(340/2.0),
+    largura: 470,
+    comprimento: 340,
+    permiteDentro: true,
+    tipo: 'retangular'
+  },
+  {// area 5
+    x: -40+(110/2.0),
+    z: -430+(150/2.0),
+    largura: 110,
+    comprimento: 150,
+    permiteDentro: false,
+    tipo: 'retangular'
+  },
+  {// area 6
+    x: -261+(620/2.0),
+    z: 370+(210/2.0),
+    largura: 620,
+    comprimento: 210,
+    permiteDentro: true,
+    tipo: 'retangular'
+  },
+  {// area 7
+    x: -168+(166/2.0),
+    z: 62+(76/2.0),
+    largura: 166,
+    comprimento: 76,
+    permiteDentro: true,
+    tipo: 'retangular'
+  },
+  {// area 8
+    x: -91+(10/2.0),
+    z: 92+(10/2.0),
+    raio: 10,
+    permiteDentro: false,
+    tipo: 'circular'
+  },
+  {// area 9
+    x: 20+(250/2.0),
+    z: 240+(120/2.0),
+    largura: 250,
+    comprimento: 120,
+    permiteDentro: true,
+    tipo: 'retangular'
+  },
+  {// area 10
+    x: 30+(240/2.0),
+    z: 250+(110/2.0),
+    largura: 240,
+    comprimento: 110,
+    permiteDentro: false,
+    tipo: 'retangular'
+  },
+  {// area 11
+    x: -830+(250/2.0),
+    z: 110+(320/2.0),
+    largura: 250,
+    comprimento: 320,
+    permiteDentro: false,
+    tipo: 'retangular'
+  }
+];
+
+function testaLimite(x, z){
+  var permitir = false;
+
+  // Testa todos os limites que permitem pontos por dentro
+  for(let i=0; i<limitesGeracaoArvores.length; i++){
+    var limite = limitesGeracaoArvores[i];
+
+    if(limite.tipo === 'retangular' && limite.permiteDentro){
+      var box = new THREE.Box2( 
+        new THREE.Vector2(limite.x - limite.largura/2.0, limite.z - limite.comprimento/2.0), 
+        new THREE.Vector2(limite.x + limite.largura/2.0, limite.z + limite.comprimento/2.0) 
+      );
+      var contains = box.containsPoint(new THREE.Vector2(x,z));
+      if(contains){
+        permitir=true;
+        break;
+      }
+    }
+    if(limite.tipo === 'circular' && limite.permiteDentro){
+      var pos1 = new THREE.Vector3(limite.x, 0, limite.z);
+      var posAtual = new THREE.Vector3(x, 0, z);
+      var contains = pos1.distanceTo(posAtual) < limite.raio;
+      if(contains){
+        permitir=true;
+        break;
+      }
+    }
+  }
+
+  // Testa todos os limites que permitem pontos por fora
+  for(let i=0; i<limitesGeracaoArvores.length; i++){
+    var limite = limitesGeracaoArvores[i];
+    if(limite.tipo === 'retangular' && !limite.permiteDentro){
+      var box = new THREE.Box2( 
+        new THREE.Vector2(limite.x - limite.largura/2.0, limite.z - limite.comprimento/2.0), 
+        new THREE.Vector2(limite.x + limite.largura/2.0, limite.z + limite.comprimento/2.0) 
+      );
+      var contains = box.containsPoint(new THREE.Vector2(x,z));
+      if(contains){
+        permitir=false;
+        break;
+      }
+    }
+    if(limite.tipo === 'circular' && !limite.permiteDentro){
+      var pos1 = new THREE.Vector3(limite.x, 0, limite.z);
+      var posAtual = new THREE.Vector3(x, 0, z);
+      var contains = pos1.distanceTo(posAtual) < limite.raio;
+      if(contains){
+        permitir=false;
+        break;
+      }
+    }
+  }
+
+  return permitir;
 }
 
 // Cria uma grade onde as arvores vão aparecer
@@ -575,7 +759,7 @@ function obtemGrid() {
     for (let z = top; z <= bottom; z += espacamento) {
       // As funções nesse if são o que define a exclusão de pontos da grid, onde as arvores não podem
       // aparecer, como dentro das montanhas ou em cima do avião
-      if (limiteMontanhas(x, z) && limitePistaAviao(x, z) && limitesArbitrarios(x, z)) {
+      if (testaLimite(x, z)) {
         pontos.push({
           x, z, usado: false
         });
@@ -588,7 +772,7 @@ function obtemGrid() {
 
 ///////////////// Criação das arvores /////////////////////
 
-function geraArvore() {
+function geraArvore(texturasCarregadas) {
 
   // Randomiza uma posição no grid
   let grid = obtemGrid();
@@ -608,7 +792,7 @@ function geraArvore() {
   grid[indice].usado = true;
 
   // Randomiza qual modelo de arvore vai ser retornado
-  let numModelo = Math.floor(Math.random() * 4);
+  let numModelo = Math.floor(Math.random() * 5);
   switch (numModelo) {
       case 0:
           return arvoreModelo1(ponto.x, ponto.z);
@@ -618,8 +802,10 @@ function geraArvore() {
           return arvoreModelo3(ponto.x, ponto.z);
       case 3:
           return arvoreModelo4(ponto.x, ponto.z);
+      case 4:
+          return moitaModelo1(ponto.x, ponto.z, texturasCarregadas);
       default:
-          return arvoreModelo1(ponto.x, ponto.z);
+          return moitaModelo1(ponto.x, ponto.z, texturasCarregadas);
   }
 
 }
@@ -638,8 +824,38 @@ export default function ambiente(texturasCarregadas) {
 
   //gera arvores
   for (let i = 0; i < 200; i++) {
-      arvoresHolder.add(geraArvore());
+      arvoresHolder.add(geraArvore(texturasCarregadas));
   }
+
+  //debug dos limites das arvores
+  // var planeMaterial = new THREE.MeshLambertMaterial({
+  //   color:'rgb(89, 179, 0)',
+  //   opacity: 0.5,
+  //   transparent: true
+  // });
+  // var circleMaterial = new THREE.MeshLambertMaterial({
+  //   color:'#ff00ff',
+  //   opacity: 0.5,
+  //   transparent: true
+  // });
+  // for(let i=0; i<limitesGeracaoArvores.length; i++){
+  //   var limite = limitesGeracaoArvores[i];
+  //   if(limite.tipo === 'retangular'){
+  //     var planeGeometry = new THREE.PlaneGeometry(limite.largura, limite.comprimento, 1, 1);
+  //     //planeGeometry.translate(0.0, 0.0, 0.0);
+  //     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  //     plane.rotateX(degreesToRadians(-90));
+  //     plane.position.set(limite.x, 1.0, limite.z);
+  //     arvoresHolder.add(plane);
+  //   }
+  //   if(limite.tipo === 'circular'){
+  //     const geometry = new THREE.CircleGeometry( limite.raio, 16 );
+  //     const circle = new THREE.Mesh( geometry, circleMaterial );
+  //     circle.rotateX(degreesToRadians(-90));
+  //     circle.position.set(limite.x, 1.2, limite.z);
+  //     arvoresHolder.add( circle );
+  //   }
+  // }
 
   return arvoresHolder;
 }

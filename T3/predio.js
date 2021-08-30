@@ -51,16 +51,10 @@ export function predio1(x, z,texturasCarregadas){
     var box_material = [
         configuraMaterial(texturasCarregadas["predio1_teste.jpg"],1,3,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio1_teste.jpg"],1,3,'#ffffff'),
-        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,"rgb(59,69,71)"),
+        configuraMaterial(texturasCarregadas["grama.jpg"],2,2,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio1_teste.jpg"],1,3,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio1_teste.jpg"],1,3,'#ffffff'),
-        configuraMaterial(texturasCarregadas["predio1_teste.jpg"],1,3,'#ffffff')
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_sem_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_sem_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide,color:"rgb(59,69,71)"}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide})
+        configuraMaterial(texturasCarregadas["predio1_teste.jpg"],1,3,'#ffffff')  
         
     ];
 
@@ -71,21 +65,15 @@ export function predio1(x, z,texturasCarregadas){
     box.position.set(x + largura/2.0, altura / 2.0, z + comprimento/2.0);
 
     //caixinha de cima
-    var box_material2 = new THREE.MeshLambertMaterial({ color: 'red'});
-    // var box_material2 = [
-    //     configuraMaterial(texturasCarregadas["predio1_caixinha.jpg"],1,1,'#ffffff'),
-    //     configuraMaterial(texturasCarregadas["predio1_caixinha_porta.jpg"],1,1,'#ffffff'),
-    //     configuraMaterial(texturasCarregadas["container_roof.jpg"],1,1,"rgb(59,69,71)"),
-    //     configuraMaterial(texturasCarregadas["predio1_caixinha.jpg"],1,1,'#ffffff'),
-    //     configuraMaterial(texturasCarregadas["predio1_caixinha.jpg"],1,1,'#ffffff'),
-    //     configuraMaterial(texturasCarregadas["predio1_caixinha.jpg"],1,1,'#ffffff')
-    //     // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha_porta.jpg"],side:THREE.DoubleSide}),
-    //     // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-    //     // new THREE.MeshLambertMaterial({map:texturasCarregadas["container_roof.jpg"],side:THREE.DoubleSide, color:"rgb(59,69,71)"}),//rgb(110,118,119)
-    //     // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-    //     // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-    //     // new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide})
-    // ];
+    var box_material2 = [
+        configuraMaterial(texturasCarregadas["predio1_caixinha_paredes.jpg"],2,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio1_caixinha_paredes.jpg"],2,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],2,1,"rgb(59,69,71)"),
+        configuraMaterial(texturasCarregadas["predio1_caixinha_paredes.jpg"],2,1,'#ffffff'),
+        new THREE.MeshPhongMaterial({color:"rgb(196,198,197)", shininess:"200", opacity: 0.8,transparent: true}),
+        configuraMaterial(texturasCarregadas["predio1_caixinha_paredes.jpg"],2,1,'#ffffff'),
+    
+    ];
     const altura_caixinha = 10;
     const largura_caixinha = 20;
     const geometria_caixinha = new THREE.BoxGeometry( largura_caixinha, altura_caixinha, largura_caixinha );
@@ -115,13 +103,6 @@ export function predio2(x, z, texturasCarregadas){
         configuraMaterial(texturasCarregadas["predio2_sem_cano.jpg"],1,1,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio2_sem_cano.jpg"],1,1,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio2_sem_cano.jpg"],1,1,'#ffffff')
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_sem_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_sem_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide,color:"rgb(59,69,71)"}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_cano.jpg"],side:THREE.DoubleSide})
-        
     ];
 
     const box = new THREE.Mesh( boxGeometry, box_material );
@@ -143,12 +124,6 @@ export function predio2(x, z, texturasCarregadas){
         configuraMaterial(texturasCarregadas["predio2_caixinha.jpg"],1,1,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio2_caixinha.jpg"],1,1,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio2_caixinha.jpg"],1,1,'#ffffff')
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha_porta.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["container_roof.jpg"],side:THREE.DoubleSide, color:"rgb(59,69,71)"}),//rgb(110,118,119)
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide})
     ];
 
     const caixinha = new THREE.Mesh( geometria_caixinha, box_material2 );
@@ -170,24 +145,12 @@ export function predio2(x, z, texturasCarregadas){
         configuraMaterial(texturasCarregadas["predio2_triangulo_lados.jpg"],1,1,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio2_triangulo_lados.jpg"],1,1,'#ffffff'),
         configuraMaterial(texturasCarregadas["predio2_triangulo_lados.jpg"],1,1,'#ffffff')
-        // configuraMaterial(texturasCarregadas["predio2_triangulo_frente.jpg"],0.08,0.08,'#ffffff'),
-        // configuraMaterial(texturasCarregadas["predio2_triangulo_frente.jpg"],0.08,0.08,'#ffffff'),
-        // configuraMaterial(texturasCarregadas["predio2_triangulo_frente.jpg"],0.08,0.08,'#ffffff'),
-        // configuraMaterial(texturasCarregadas["predio2_triangulo_frente.jpg"],0.08,0.08,'#ffffff'),
-        // configuraMaterial(texturasCarregadas["predio2_triangulo_frente.jpg"],0.08,0.08,'#ffffff'),
-        // configuraMaterial(texturasCarregadas["predio2_triangulo_frente.jpg"],0.08,0.08,'#ffffff')
-        // configuraMaterial(texturasCarregadas["predio2_triangulo_lados.jpg"],1,1,'#ffffff')
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha_porta.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["container_roof.jpg"],side:THREE.DoubleSide, color:"rgb(59,69,71)"}),//rgb(110,118,119)
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["predio1_caixinha.jpg"],side:THREE.DoubleSide}),
-        // new THREE.MeshLambertMaterial({map:texturasCarregadas["concreto.jpg"],side:THREE.DoubleSide})
+       
     ];
     var triangulo = new THREE.Mesh(boxGeometry2, box_material3);
     triangulo.castShadow = true;
     triangulo.receiveShadow = true;
-    triangulo.position.set(-largura/2.0 +20.0,altura/2.0 +6.0,9.0);
+    triangulo.position.set(-largura/2.0 +20.0,altura/2.0 +5.0,9.0);
 
     box.add(triangulo)
 
@@ -203,7 +166,17 @@ export function predio3(x, z, texturasCarregadas){
     const width1 = 50;//largura
     const height1 = 90;//comprimento
     const boxGeometry1 = new THREE.BoxGeometry( width1, height1, depth1 );
-    const box1 = new THREE.Mesh( boxGeometry1, material );
+
+    var box_material = [
+        configuraMaterial(texturasCarregadas["predio3_lado2.jpg"],1,3,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_lado2.jpg"],1,3,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_lado1.jpg"],2,3,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_lado1.jpg"],2,3,'#ffffff')//'rgb(112,115,117)'
+    ];
+
+    const box1 = new THREE.Mesh( boxGeometry1, box_material );
     box1.castShadow = true;
     box1.receiveShadow = true;
 
@@ -211,7 +184,17 @@ export function predio3(x, z, texturasCarregadas){
     const width2 = 40;
     const height2 = 20;
     const boxGeometry2 = new THREE.BoxGeometry( width2, height2, depth2 );
-    const box2 = new THREE.Mesh( boxGeometry2, material );
+
+    var box_material2 = [
+        configuraMaterial(texturasCarregadas["predio3_andar1.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_andar1.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_andar1.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_andar1.jpg"],1,1,'#ffffff')//'rgb(112,115,117)'
+    ];
+
+    const box2 = new THREE.Mesh( boxGeometry2, box_material2 );
     box2.castShadow = true;
     box2.receiveShadow = true;
     box1.add(box2);
@@ -221,7 +204,17 @@ export function predio3(x, z, texturasCarregadas){
     const width3 = 25;
     const height3 = 20;
     const boxGeometry3 = new THREE.BoxGeometry( width3, height3, depth3 );
-    const box3 = new THREE.Mesh( boxGeometry3, material );
+
+    var box_material3 = [
+        configuraMaterial(texturasCarregadas["predio3_lado2.jpg"],1,2,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_lado2.jpg"],1,2,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_andar2.jpg"],2,2,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio3_andar2.jpg"],2,2,'#ffffff')//'rgb(112,115,117)'
+    ];
+
+    const box3 = new THREE.Mesh( boxGeometry3, box_material3 );
     box3.castShadow = true;
     box3.receiveShadow = true;
     box2.add(box3);
@@ -231,7 +224,17 @@ export function predio3(x, z, texturasCarregadas){
     const width4 = 20;
     const height4 = 15;
     const boxGeometry4 = new THREE.BoxGeometry( width4, height4, depth4 );
-    const box4 = new THREE.Mesh( boxGeometry4, material );
+
+    var box_material4 = [
+        new THREE.MeshPhongMaterial({color:"rgb(196,198,197)", shininess:"200", opacity: 0.8,transparent: true}),
+        new THREE.MeshPhongMaterial({color:"rgb(196,198,197)", shininess:"200", opacity: 0.8,transparent: true}),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        new THREE.MeshPhongMaterial({color:"rgb(196,198,197)", shininess:"200", opacity: 0.8,transparent: true}),
+        new THREE.MeshPhongMaterial({color:"rgb(196,198,197)", shininess:"200", opacity: 0.8,transparent: true}),
+        new THREE.MeshPhongMaterial({color:"rgb(196,198,197)", shininess:"200", opacity: 0.8,transparent: true})
+    ];
+
+    const box4 = new THREE.Mesh( boxGeometry4,box_material4);
     box4.castShadow = true;
     box4.receiveShadow = true;
     box3.add(box4);
@@ -356,13 +359,23 @@ export function predio5(x, z, texturasCarregadas){
 }
 
 export function predio6(x, z, texturasCarregadas){
-    var material = new THREE.MeshLambertMaterial({ color: '#83BAD6'});
+    // var material = new THREE.MeshLambertMaterial({ color: '#83BAD6'});
 
     const depth1 = 80;
     const width1 = 60;
     const height1 = 30;
     const boxGeometry1 = new THREE.BoxGeometry( width1, height1, depth1 );
-    const box1 = new THREE.Mesh( boxGeometry1, material );
+
+    var box_material = [
+        configuraMaterial(texturasCarregadas["predio6_caixinha_menor.jpg"],4,2,'#ffffff'),//'#ffffff'
+        configuraMaterial(texturasCarregadas["predio6_maior.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'rgb(110,115,108)'),
+        configuraMaterial(texturasCarregadas["predio6_menor.jpg"],2,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio6_menor.jpg"],2,1,'#ffffff'),
+    ];
+
+    const box1 = new THREE.Mesh( boxGeometry1, box_material );
     box1.castShadow = true;
     box1.receiveShadow = true;
 
@@ -370,7 +383,17 @@ export function predio6(x, z, texturasCarregadas){
     const width2 = 30;
     const height2 = 20;
     const boxGeometry2 = new THREE.BoxGeometry( width2, height2, depth2 );
-    const box2 = new THREE.Mesh( boxGeometry2, material );
+
+    var box_material2 = [
+        configuraMaterial(texturasCarregadas["predio6_caixinha_maior.jpg"],2,1,'#ffffff'),//'#ffffff'
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'rgb(110,115,108)'),
+        configuraMaterial(texturasCarregadas["concreto.jpg"],1,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio6_caixinha_menor.jpg"],2,1,'#ffffff'),
+        configuraMaterial(texturasCarregadas["predio6_caixinha_menor.jpg"],2,1,'#ffffff'),
+    ];
+
+    const box2 = new THREE.Mesh( boxGeometry2, box_material2 );
     box2.castShadow = true;
     box2.receiveShadow = true;
 

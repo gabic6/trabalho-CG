@@ -4,26 +4,51 @@ import * as THREE from '../build/three.module.js';
 import {
     degreesToRadians,
 } from "../libs/util/util.js";
+function configuraMaterial(textura, repeat_largura, repeat_comprimento,cor,material=0){
+    textura = textura.clone();
+    textura.needsUpdate = true;
+    if(material == 1){
+        var material = new THREE.MeshLambertMaterial({ 
+            color: cor,
+            map: textura,
+            transparent: true,
+            side:THREE.DoubleSide
+        });
+    }
+    else{
+        var material = new THREE.MeshPhongMaterial({ 
+            color: cor,
+            shininess:"200",
+            map: textura,
+            side:THREE.DoubleSide
+        });
+    }
+    material.map.repeat.set(
+        repeat_largura,
+        repeat_comprimento
+    );
+    material.map.wrapS = THREE.RepeatWrapping;
+    material.map.wrapT = THREE.RepeatWrapping;
+
+    return material;
+}
 
 export default function aviao(texturasCarregadas) {
-    /////Textura
-    var textureLoader = new THREE.TextureLoader();
-    var corpo  = textureLoader.load('assets/textures/opcao3.jpg');
-    var wings = textureLoader.load('assets/textures/wings.jpg');
+
+    var material_aviao_red_corpo = configuraMaterial(texturasCarregadas["opcao3.jpg"],1,1,'red');
+    var material_asas_red = configuraMaterial(texturasCarregadas["wings.jpg"],4,1,'red');
 
     var objColor_r = 'red';
-    var material_aviao_red = new THREE.MeshPhongMaterial({color:objColor_r, shininess:"200",map:corpo});
+    var material_aviao_red = new THREE.MeshPhongMaterial({color:objColor_r, shininess:"200"})
     var objColor_y = 'yellow';
-    var material_aviao_yellow = new THREE.MeshPhongMaterial({color:objColor_y, shininess:"200"});
-
-    var material_asas_red = new THREE.MeshPhongMaterial({color:objColor_r, shininess:"200",map:wings});
+    var material_aviao_yellow = new THREE.MeshPhongMaterial({color:objColor_y, shininess:"200"})
 
 
     //cilindro1 - corpo principal do avião
     var diametro_cilindro1 = 1.27;
     var altura_cilindro1 = 4.0;
     var geometria_cilindro1 = new THREE.CylinderGeometry(diametro_cilindro1 / 2.0, diametro_cilindro1 / 2.0, altura_cilindro1, 18);
-    var cilindro1 = new THREE.Mesh(geometria_cilindro1, material_aviao_red);
+    var cilindro1 = new THREE.Mesh(geometria_cilindro1, material_aviao_red_corpo);
     cilindro1.castShadow = true;
     cilindro1.receiveShadow = true;
     cilindro1.position.set(0.0, 0.0, 0.0);
@@ -56,7 +81,7 @@ export default function aviao(texturasCarregadas) {
 
     //rodinhas
     var objColor_borracha ="rgb(64,64,64)" ;
-    var material_aviao_borracha = new THREE.MeshLambertMaterial({color:objColor_borracha})
+    var material_aviao_borracha = new THREE.MeshLambertMaterial({color:objColor_borracha});
     const geometria_torus = new THREE.TorusGeometry(0.20, 0.20, 30, 80);
     const torus1 = new THREE.Mesh( geometria_torus, material_aviao_borracha);
     torus1.castShadow = true;
@@ -152,7 +177,7 @@ export default function aviao(texturasCarregadas) {
     var diametro_cilindro3 = 0.635;
     var altura_cilindro3 = 3.5;
     var geometria_cilindro3 = new THREE.CylinderGeometry(diametro_cilindro1 / 2.0, diametro_cilindro3 / 2.0, altura_cilindro3, 18);
-    var cilindro3 = new THREE.Mesh(geometria_cilindro3, material_aviao_red);
+    var cilindro3 = new THREE.Mesh(geometria_cilindro3, material_aviao_red_corpo);
     cilindro3.castShadow = true;
     cilindro3.receiveShadow = true;
     cilindro3.position.set(0.0, 0.06 - (altura_cilindro1 / 2.0) - (altura_cilindro3 / 2.0), -0.15);
@@ -268,10 +293,24 @@ export default function aviao(texturasCarregadas) {
     asas_menores.position.set(0.0, -altura_cilindro3 / 2.0 + profundidade_asas_menores,0.0);
     cilindro3.add(asas_menores);
 
+    //símbolo nas asas
+    var altura_s = 0.4;
+    var largura_s =0.5;
+    var geometria_simbolo = new THREE.PlaneGeometry(altura_s,largura_s);
+    var material_simbolo = configuraMaterial(texturasCarregadas["simbolo.png"],1,1,'white',1);
+    var simbolo = new THREE.Mesh(geometria_simbolo,material_simbolo);
+    simbolo.rotation.set(0,0,degreesToRadians(90));
+    simbolo.position.set(altura_asas_menores+0.4,largura_asas_menores/2.0 -0.6,-altura_asas_menores/2.0 +0.001);
+    asas_menores.add(simbolo);
+
+    var simbolo_direito = simbolo.clone();
+    simbolo_direito.position.set(altura_asas_menores+0.4,-largura_asas_menores/2.0 +0.6,-altura_asas_menores/2.0 +0.001);
+    asas_menores.add(simbolo_direito);
+
     //esfera atrás
     var raio_esfera_atras = diametro_cilindro3 / 2.0;
     var geometria_esfera_atras = new THREE.SphereGeometry(raio_esfera_atras, 18, 18);
-    var esfera_atras = new THREE.Mesh(geometria_esfera_atras, material_aviao_red);
+    var esfera_atras = new THREE.Mesh(geometria_esfera_atras, material_aviao_red_corpo);
     esfera_atras.castShadow = true;
     esfera_atras.receiveShadow = true;
     esfera_atras.position.set(0.0, -altura_cilindro3 / 2.0, 0.0);

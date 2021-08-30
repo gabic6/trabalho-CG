@@ -46,8 +46,8 @@ camera.updateProjectionMatrix();
 
 const lightHem = new THREE.HemisphereLight('rgb(255, 255, 255)', 'rgb(47, 79, 79)', 0.5);
 scene.add(lightHem);
-//scene.background = new THREE.Color('rgb(179, 217, 255)');
-scene.background = null;
+scene.background = new THREE.Color('rgb(207, 192, 192)');
+//scene.background = null;
 
 const lightSb = new THREE.PointLight('rgb(255, 255, 255)', 2.0);
 lightSb.position.set(0.0, -1200.0, 0.0);
@@ -66,7 +66,7 @@ spotLight.visible = false;
 //////////// Sol ////////////////
 
 // Posição relativa da luz ao avião
-var lightHolderPosition = new THREE.Vector3(100.0, 200.0, 0.0);
+var lightHolderPosition = new THREE.Vector3(500.0, 1000.0, 0.0);
 // Vector que guarda a posição da luz em relação ao mundo
 var lightPosition = new THREE.Vector3(0,3,0);
 // Cor da luz
@@ -88,7 +88,7 @@ function setDirectionalLighting(position)
   
   var d = 20;
   dirLight.shadow.camera.near = 1;
-  dirLight.shadow.camera.far = 500;
+  dirLight.shadow.camera.far = 1500;
   dirLight.shadow.camera.left = -d;
   dirLight.shadow.camera.right = d;
   dirLight.shadow.camera.top = d;
@@ -136,7 +136,7 @@ function criaLuzDirecionalComSombraEstatica(scene_ref, x, z, d_shadow) {
     light.shadow.autoUpdate = false;
     light.shadow.needsUpdate = true;
     light.shadow.camera.near = 1;
-    light.shadow.camera.far = 800;
+    light.shadow.camera.far = 1800;
     light.shadow.camera.left = -d_shadow;
     light.shadow.camera.right = d_shadow;
     light.shadow.camera.top = d_shadow;
@@ -176,24 +176,14 @@ function criaLuzDirecionalComSombraEstatica(scene_ref, x, z, d_shadow) {
 // sombras estáticas
 let dimensaoLuz = 1000;
 let raioLuz = dimensaoLuz/2.0;
-/*criaLuzDirecionalComSombraEstatica(scene, -raioLuz, raioLuz, raioLuz );
-criaLuzDirecionalComSombraEstatica(scene, -raioLuz, -raioLuz, raioLuz );
-criaLuzDirecionalComSombraEstatica(scene, raioLuz, -raioLuz, raioLuz );
-criaLuzDirecionalComSombraEstatica(scene, raioLuz, raioLuz, raioLuz );*/
 var light1 = criaLuzDirecionalComSombraEstatica(scene, -raioLuz, raioLuz, raioLuz );
 var light2 = criaLuzDirecionalComSombraEstatica(scene, -raioLuz, -raioLuz, raioLuz );
 var light3 = criaLuzDirecionalComSombraEstatica(scene, raioLuz, -raioLuz, raioLuz );
 var light4 = criaLuzDirecionalComSombraEstatica(scene, raioLuz, raioLuz, raioLuz );
 
-/*light1.visible = false;
-light2.visible = false;
-light3.visible = false;
-light4.visible = false;*/
-
 /////////// Câmera simulação //////////////////
 
-//var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
-var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 25000);
+var cameraSimula = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 25000);
 cameraSimula.lookAt(0, 0, 0);
 cameraSimula.position.set(0.0, 0.0, -0.1);
 
@@ -210,8 +200,7 @@ scene.add(cameraSimulaHolderHolder);
 
 /////////// Câmera do Piloto //////////////////
 
-//var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
-var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 25000);
+var cameraPiloto = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 25000);
 cameraPiloto.lookAt(0, 0, 0.1);
 cameraPiloto.position.set(0.0, 1.3, -1.8);
 
@@ -232,7 +221,7 @@ let caminho_curva = new THREE.Object3D();
 
 function carregaObjetos(){
     // create the ground plane
-    var planeGeometry = new THREE.PlaneGeometry(2000, 2000, 800, 800);
+    var planeGeometry = new THREE.PlaneGeometry(2000, 2000, 1, 1);
     planeGeometry.translate(0.0, 0.0, 0.0);
     var planeMaterial = new THREE.MeshLambertMaterial({
         color:'rgb(89, 179, 0)',
@@ -248,7 +237,7 @@ function carregaObjetos(){
     plane.receiveShadow = true;
     scene.add(plane);
 
-    var planeGeom = new THREE.PlaneGeometry(18000, 18000, 800, 800);
+    var planeGeom = new THREE.PlaneGeometry(18000, 18000, 1, 1);
     var planeMat = new THREE.MeshLambertMaterial({
         color:'rgb(21, 79, 6)',
     });
@@ -296,6 +285,7 @@ function carregaObjetos(){
     aviaoHolder = aviaoObj.aviaoHolder;
     eixo_helice = aviaoObj.eixo_helice;
     scene.add(aviaoHolder);
+    aviaoHolder.position.set(-684.0, 1.0, -480.0);//0,20.0,0
 
     // Adiciona a câmera com a visão do piloto do avião
     aviaoHolder.add(cameraPiloto);
@@ -327,7 +317,7 @@ var eixo_helice = new THREE.Object3D();
 
 // Adiciona o avião na cena e o posiciona
 
-aviaoHolder.position.set(0.0, 1.0, 0.0);//0,20.0,0
+aviaoHolder.position.set(-684.0, 1.0, -480.0);//0,20.0,0
 
 // Cria um boxHelper pra poder visualizar a area de colisão do avião
 // const box_1 = new THREE.Box3();
@@ -389,6 +379,7 @@ function alternaModo() {
         light2.visible = modoInspecaoAtivo===false;
         light3.visible = modoInspecaoAtivo===false;
         light4.visible = modoInspecaoAtivo===false;
+        lightSphere.visible = modoInspecaoAtivo===false;
 
         skybox.visible = modoInspecaoAtivo===false;
         cidade.visible = modoInspecaoAtivo===false;
@@ -615,28 +606,37 @@ const texturas = [
     "chao_pedra.jpg",
     "fazendinha_feliz.jpg",
     "lago.png",
+    "concreto.jpg",
+    "container_roof.jpg",
+    "apartment_block5.png",
+    "building_factory.png",
+    "brick01.jpg",
+    "building_l2.png",
+    "predio1_teste.jpg",
+    "predio1_caixinha_paredes.jpg",
     "predio2_cano.jpg",
     "predio2_sem_cano.jpg",
     "predio2_caixinha_porta.jpg",
     "predio2_caixinha.jpg",
-    "concreto.jpg",
-    "container_roof.jpg",
-    "apartment_block5.png",
-    "predio1_teste.jpg",
     "predio2_triangulo_frente.jpg",
     "predio2_triangulo_lados.jpg",
     "predio2_roof.jpg",
-    "building_factory.png",
-    "brick01.jpg",
-    "building_l2.png",
+    "predio6_caixinha_maior.jpg",
+    "predio6_caixinha_menor.jpg",
+    "predio6_maior.jpg",
+    "predio6_menor.jpg",
+    "predio3_andar1.jpg",
+    "predio3_andar2.jpg",
+    "predio3_lado1.jpg",
+    "predio3_lado2.jpg",
+    "rodinha.jpg",
+    "moita1.png",
+    "areia.png",
+    "mancha.png",
     // Texturas do avião
-    "aviao_corpo.png",
-    "comunismo.jpg",
-    "corpo_opcao2.jpg",
-    "crown.png",
     "opcao3.jpg",
-    "predio_com_janelas.jpg",
     "wings.jpg",
+    "simbolo.png",
     // Texturas da skybox
     "Daylight_Box_Back.png",
     "Daylight_Box_Bottom.png",
@@ -797,11 +797,12 @@ function loadOBJFile(modelPath, modelName, desiredScale, angle, visibility)
         obj.rotateY(degreesToRadians(angle));
         
         obj.translateX(-85.0);
-        obj.translateY(1.0);
+        //obj.translateY(1.0);
+        obj.translateY(0.1);
         obj.translateZ(100.0);
         
         objetoExterno = obj;
-        console.log('************************',objetoExterno, obj);
+        //console.log('************************',objetoExterno, obj);
         //scene.add ( obj );
         
       }, onProgress, onError );
@@ -815,7 +816,7 @@ function onError(erro) {
 function onProgress ( xhr, model ) {
     if ( xhr.lengthComputable ) {
       var percentComplete = xhr.loaded / xhr.total * 100;
-      console.log("Loading... " + Math.round( percentComplete, 2 ) + '% processed' );
+      //console.log("Loading... " + Math.round( percentComplete, 2 ) + '% processed' );
     }
 }
 

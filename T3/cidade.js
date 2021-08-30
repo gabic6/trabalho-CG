@@ -77,6 +77,34 @@ function configuraMaterial(textura, plano_largura, plano_comprimento, dim_textur
 
     return material;
 }
+function configuraMaterialPeriferia(textura, repeat_largura, repeat_comprimento,cor,material=0){
+    textura = textura.clone();
+    textura.needsUpdate = true;
+    if(material == 1){
+        var material = new THREE.MeshLambertMaterial({ 
+            color: cor,
+            map: textura,
+            transparent: true,
+            side:THREE.DoubleSide
+        });
+    }
+    else{
+        var material = new THREE.MeshPhongMaterial({ 
+            color: cor,
+            shininess:"200",
+            map: textura,
+            side:THREE.DoubleSide
+        });
+    }
+    material.map.repeat.set(
+        repeat_largura,
+        repeat_comprimento
+    );
+    material.map.wrapS = THREE.RepeatWrapping;
+    material.map.wrapT = THREE.RepeatWrapping;
+
+    return material;
+}
 
 function criarCidade(texturasCarregadas, objetoExterno) {
     // Clona a textura do asfalto pra nao precisar carregar ela duas vezes
@@ -101,6 +129,7 @@ function criarCidade(texturasCarregadas, objetoExterno) {
     material_asfalto_v.map.repeat.set(10,1);
     material_asfalto_v.map.wrapS = THREE.RepeatWrapping;
     material_asfalto_v.map.wrapT = THREE.RepeatWrapping;
+    material_asfalto_v.anisotropy = 0;
 
     material_concreto = new THREE.MeshLambertMaterial({ 
         color: '#ffffff',
@@ -331,12 +360,69 @@ function criarCidade(texturasCarregadas, objetoExterno) {
     predio6_menor2.rotateY(degreesToRadians(180));
     cidadeHolder.add(predio6_menor2);
     
-    // predio6_menor.position.set(
-    //     15,
-    //     predio6_menor.position.y,
-    //     predio6_menor.position.z
-    // )
+    //areia
+    var lados_areia = 20;
+    var plano_areia = new THREE.PlaneGeometry(lados_areia,lados_areia);
+    var areia_material = configuraMaterialPeriferia(texturasCarregadas["areia.png"],2,2,'white',1);
+    var areia = new THREE.Mesh(plano_areia,areia_material);
+    areia.position.set(280,0.1,220);
+    areia.rotateX(degreesToRadians(90));
+    areia.rotateZ(degreesToRadians(-90));
+    cidadeHolder.add(areia);
 
+    var areia2 = areia.clone();
+    areia2.position.set(280,0.1,196.7);
+    cidadeHolder.add(areia2);
+
+    var areia3 = areia.clone();
+    areia3.position.set(280,0.1,176.7);
+    cidadeHolder.add(areia3);
+
+    var areia4 = areia.clone();
+    areia4.position.set(280,0.1,155);
+    cidadeHolder.add(areia4);
+
+    var areia5 = areia.clone();
+    areia5.position.set(280,0.1,135);
+    cidadeHolder.add(areia5);
+
+    var areia6 = areia.clone();
+    areia6.position.set(280,0.1,115);
+    cidadeHolder.add(areia6);
+
+    var areia7 = areia.clone();
+    areia7.position.set(280,0.1,91);
+    cidadeHolder.add(areia7);
+
+    var areia8 = areia.clone();
+    areia8.position.set(280,0.1,71);
+    cidadeHolder.add(areia8);
+
+    var areia9 = areia.clone();
+    areia9.position.set(280,0.1,45);
+    cidadeHolder.add(areia9);
+
+    var areia10 = areia.clone();
+    areia10.position.set(280,0.1,20);
+    cidadeHolder.add(areia10);
+
+    var areia11 = areia.clone();
+    areia11.position.set(280,0.1,0);
+    cidadeHolder.add(areia11);
+
+    var areia12 = areia.clone();
+    areia12.position.set(280,0.1,-20);
+    cidadeHolder.add(areia12);
+
+    var areia13 = areia.clone();
+    areia13.position.set(280,0.1,-40);
+    cidadeHolder.add(areia13);
+
+    var areia14 = areia.clone();
+    areia14.position.set(280,0.1,-60);
+    cidadeHolder.add(areia14);
+
+   
 
     // Posiciona o holder um pouco mais alto que o plano pra não dar conflito
     cidadeHolder.position.set(0, 0.1, 0);
