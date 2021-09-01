@@ -1,80 +1,90 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Basic Scene</title>
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../html/resources/default.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">  
-    <style>
-      body {
-        position: relative;
-      }
-      .telaLoading {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 9000;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-image: url("./assets/textures/606894.jpg");
-        background-color: #cccccc;
-        background-position: center; /* Center the image */
-        background-repeat: no-repeat; /* Do not repeat the image */
-        background-size: cover; /* Resize the background image to cover the entire container */
-      }
-      .loading {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: #0000005b;
-        border-radius: 10px;
-        padding: 16px;
-      }
-      .txtLoading {
-        color: #FFF;
-        padding-bottom: 6px;
-        font-size: 16px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
-      .fundoLoading {
-        background-color: red;
-        width: 200px;
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-      }
-      .barraLoading {
-        background-color: yellow;
-        height: 20px;
-        width: 0
-      }
-      .btnLoading {
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: red;
-        border: 2px solid yellow;
-        border-radius: 15px;
-        color: white;
-        width: 150px;
-        height: 30px;
-        font-size: 16px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: 600;
-      }
-    </style>
+  <title>Basic Scene</title>
+  <link rel="shortcut icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../html/resources/default.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      position: relative;
+    }
+
+    .telaLoading {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9000;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url("./assets/textures/606894.jpg");
+      background-color: #cccccc;
+      background-position: center;
+      /* Center the image */
+      background-repeat: no-repeat;
+      /* Do not repeat the image */
+      background-size: cover;
+      /* Resize the background image to cover the entire container */
+    }
+
+    .loading {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #0000005b;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .txtLoading {
+      color: #FFF;
+      padding-bottom: 6px;
+      font-size: 16px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .fundoLoading {
+      background-color: red;
+      width: 200px;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .barraLoading {
+      background-color: yellow;
+      height: 20px;
+      width: 0
+    }
+
+    .btnLoading {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: red;
+      border: 2px solid yellow;
+      border-radius: 15px;
+      color: white;
+      width: 150px;
+      height: 30px;
+      font-size: 16px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 600;
+    }
+  </style>
 </head>
 
 <body>
   <div id="webgl-output">
     <script type="module" src="trabalho3.js"></script>
-    <script type="module" src="caminho_checkpoint.js"></script> 
+    <script type="module" src="caminho_checkpoint.js"></script>
   </div>
   <div id="telaLoading" class="telaLoading">
     <div class="loading">
